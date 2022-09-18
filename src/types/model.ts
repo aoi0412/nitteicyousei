@@ -10,6 +10,16 @@ export type scheduleData = {
   candidates: candidate[];
 };
 
+export type candidates = {
+  [date: string]: {
+    [time: string]: {
+      startTime: Date;
+      members: member[];
+      scheduleTime: number;
+    };
+  };
+};
+
 export type candidate = {
   startTime: Date;
   scheduleTime: number; //time*30minute

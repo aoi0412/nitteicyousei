@@ -7,92 +7,61 @@ import { useRecoilValue } from "recoil";
 import { candidatesAtom, timeAtom } from "../../database/recoil";
 import CandidateModal from "../CandidateModal";
 import { addMinutes, format } from "date-fns";
+import { deleteCandidate } from "../../function/calendar";
 
 type Props = {
-  date: Date;
-  row: number;
-  column: number;
+  candidate: candidate;
+  index: number;
+  onClick: () => void;
   height: number;
-  updateCandidates: (candidate: candidate) => void;
-  deleteCandidates: () => void;
 };
-const Candidate: FC<Props> = ({
-  date,
-  column,
-  height,
-  updateCandidates,
-  deleteCandidates,
-}) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const time = useRecoilValue(timeAtom);
+const Candidate: FC<Props> = ({ candidate, height, index, onClick }) => {
+  // const { isOpen, onOpen, onClose } = useDisclosure();
   const formatTimeRange = () => {
-    const tmp: Date = addMinutes(date, time);
-    return format(date, "hh':'mm") + "~" + format(tmp, "hh':'mm");
+    const tmp: Date = addMinutes(candidate.startTime, candidate.scheduleTime);
+    return (
+      format(candidate.startTime, "hh':'mm") + "~" + format(tmp, "hh':'mm")
+    );
   };
+  console.log("rendered!!");
   return (
-    <Box
-      borderBottomStyle={column % 2 == 0 ? "dotted" : "solid"}
-      borderBottomWidth="thin"
-      borderColor={color.dark}
-      borderRadius="none"
-      height={`${height}px`}
-      padding="0"
-      overflowY="visible"
-    >
-      <Fade in={isVisible ? true : false}>
-        <Box position="relative">
-          <Button
-            position="absolute"
-            bg={color.main}
-            padding="0"
-            margin="0"
-            width="100%"
-            height={`${(height * time) / 30}px`}
-            zIndex={column + 1}
-            borderColor={color.dark}
-            borderWidth="0.5px"
-            boxShadow="2xl"
-            borderRadius="md"
+    <Fade in>
+      <Box position="relative">
+        <Button
+          position="absolute"
+          zIndex={index + 1}
+          bg={color.main}
+          padding="0"
+          margin="0"
+          width="100%"
+          height={`${(candidate.scheduleTime * height) / 30}px`}
+          borderColor={color.dark}
+          borderWidth="0.5px"
+          boxShadow="2xl"
+          borderRadius="md"
+          display="flex"
+          alignItems="flex-start"
+          onClick={onClick}
+        >
+          <Text
+            height="10"
             display="flex"
-            alignItems="flex-start"
-            onClick={() => {
-              setIsVisible(false);
-              deleteCandidates();
-            }}
+            alignItems="center"
+            color="white"
+            fontWeight="bold"
+            fontSize="2xs"
+            flexWrap="wrap"
           >
-            <Text
-              height="10"
-              display="flex"
-              alignItems="center"
-              color="white"
-              fontWeight="bold"
-              fontSize="2xs"
-              flexWrap="wrap"
-            >
-              {formatTimeRange()}
-            </Text>
-          </Button>
-        </Box>
-        <CandidateModal date={date} isVisible={isOpen} onClose={onClose} />
-      </Fade>
-      <Button
-        zIndex={column}
-        height={`${height}px`}
-        width="full"
-        _hover={{ bg: "rgba(0,0,0,0.1)" }}
-        disabled={isVisible ? true : false}
-        backgroundColor="rgba(0,0,0,0)"
-        onClick={() => {
-          setIsVisible(true);
-          updateCandidates({
-            startTime: date,
-            scheduleTime: time,
-            members: [],
-          });
-        }}
-      ></Button>
-    </Box>
+            {formatTimeRange()}
+          </Text>
+        </Button>
+      </Box>
+      {/* <CandidateModal
+        date={candidate.startTime}
+        isVisible={isOpen}
+        onClose={onClose}
+      /> */}
+    </Fade>
   );
 };
 

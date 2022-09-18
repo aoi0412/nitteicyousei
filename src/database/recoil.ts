@@ -1,9 +1,9 @@
 import { atom } from "recoil";
-import { candidate } from "../types/model";
+import { candidate, candidates } from "../types/model";
 
 export const candidatesAtom = atom({
   key: "candidates",
-  default: [] as candidate[],
+  default: {} as candidates,
 });
 
 export const timeAtom = atom({

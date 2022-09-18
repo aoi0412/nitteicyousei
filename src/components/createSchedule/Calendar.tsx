@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Table,
   TableCaption,
   TableContainer,
@@ -10,43 +11,34 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { FC, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import {
+  deleteCandidate,
+  formatDate,
+  formatTime,
   getEachMinute,
   getJaWeekString,
   getWeekList,
+  setCandidate,
 } from "../../function/calendar";
 import { color } from "../../styles/colors";
-import { candidate } from "../../types/model";
+import { candidate, member } from "../../types/model";
 import Candidate from "./Candidate";
-import { format } from "date-fns";
+import { lightFormat } from "date-fns";
+import { format } from "path";
+import { candidatesAtom, timeAtom } from "../../database/recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 type Props = {
   date: Date;
 };
 const Calendar: FC<Props> = ({ date }) => {
-  const candidates: candidate[] = [];
-  const [header, setHeader] = useState<{ day: number; dayOfWeek: string }[]>(
-    []
-  );
+  const dayOfWeekList = ["日", "月", "火", "水", "木", "金", "土"];
   const height = 30;
-  const [minuteList, setMinuteList] = useState<Date[][]>([]);
-  useLayoutEffect(() => {
-    const temp = getWeekList(date);
-    const jaWeek = getJaWeekString(temp);
-    const temp2: { day: number; dayOfWeek: string }[] = [];
-    const temp4: Date[][] = [];
-    temp.forEach((date, index) => {
-      const temp3 = date.getDate();
-      const temp5 = getEachMinute(date);
-      temp4.push(temp5);
-      temp2.push({
-        day: temp3,
-        dayOfWeek: jaWeek[index],
-      });
-    });
-    setHeader(temp2);
-    setMinuteList(temp4);
-  }, [date]);
+  const minuteList = getEachMinute();
+  const weekList = getWeekList(date);
+  const [candidates, setCandidates] = useRecoilState(candidatesAtom);
+  const scheduleTime = useRecoilValue(timeAtom);
+  console.log(candidates);
   return (
     <TableContainer width="full" padding="4">
       <Table>
@@ -59,7 +51,7 @@ const Calendar: FC<Props> = ({ date }) => {
               height={height}
               width="42px"
             ></Th>
-            {header.map((data) => {
+            {dayOfWeekList.map((dayOfWeek, index) => {
               return (
                 <Th
                   height={`${height}px`}
@@ -73,8 +65,8 @@ const Calendar: FC<Props> = ({ date }) => {
                   padding="0"
                   margin="0"
                 >
-                  <Text>{data.day}</Text>
-                  <Text>{data.dayOfWeek}</Text>
+                  <Text>{weekList[index].getDate()}</Text>
+                  <Text>{dayOfWeek}</Text>
                 </Th>
               );
             })}
@@ -89,17 +81,17 @@ const Calendar: FC<Props> = ({ date }) => {
               borderColor={color.dark}
             >
               <Box height={`${height - 12}px`}></Box>
-              {minuteList[0]?.slice(1).map((date) => (
+              {minuteList.slice(1).map((data) => (
                 <Text
                   height={`${height}px`}
                   verticalAlign="center"
                   fontSize="sm"
                 >
-                  {format(date, "HH':'mm")}
+                  {formatTime(data)}
                 </Text>
               ))}
             </Td>
-            {minuteList.map((dataList, index) => {
+            {weekList.map((date) => {
               return (
                 <Td
                   display="flex"
@@ -111,26 +103,56 @@ const Calendar: FC<Props> = ({ date }) => {
                   margin="0"
                   overflow="hidden"
                 >
-                  {dataList.map((date, index2) => (
-                    <Candidate
-                      height={height}
-                      date={date}
-                      row={index}
-                      column={index2}
-                      updateCandidates={(candidate: candidate) => {
-                        if (
-                          !candidates.find(
-                            (candidate) => candidate.startTime === date
-                          )
-                        ) {
-                          candidates.push(candidate);
-                        }
-                      }}
-                      deleteCandidates={() => {
-                        candidates.filter((data) => data.startTime !== date);
-                      }}
-                    />
-                  ))}
+                  {minuteList.map((time, index2) => {
+                    const [isCandidateIn, setIsCendidateIn] = useState(false);
+                    return (
+                      <Box
+                        borderBottomStyle={index2 % 2 == 0 ? "dotted" : "solid"}
+                        borderBottomWidth="thin"
+                        borderColor={color.dark}
+                        borderRadius="none"
+                        height={`${height}px`}
+                        padding="0"
+                        overflowY="visible"
+                      >
+                        {formatDate(date) in candidates &&
+                          formatTime(time) in candidates[formatDate(date)] && (
+                            <Candidate
+                              candidate={
+                                candidates[formatDate(date)][formatTime(time)]
+                              }
+                              height={height}
+                              index={index2}
+                              onClick={() => {
+                                setIsCendidateIn(false);
+                                deleteCandidate(
+                                  date,
+                                  time,
+                                  setCandidates,
+                                  candidates
+                                );
+                              }}
+                            />
+                          )}
+                        <Button
+                          height={`${height}px`}
+                          width="full"
+                          _hover={{ bg: "rgba(0,0,0,0.1)" }}
+                          backgroundColor="rgba(0,0,0,0)"
+                          onClick={() => {
+                            setCandidate(
+                              date,
+                              time,
+                              scheduleTime,
+                              setCandidates,
+                              candidates
+                            );
+                            setIsCendidateIn(true);
+                          }}
+                        ></Button>
+                      </Box>
+                    );
+                  })}
                 </Td>
               );
             })}
