@@ -100,7 +100,6 @@ const Calendar: FC<Props> = ({ date }) => {
                   overflow="hidden"
                 >
                   {minuteList.map((time, index2) => {
-                    const [isCandidateIn, setIsCendidateIn] = useState(false);
                     return (
                       <Box
                         borderBottomStyle={index2 % 2 == 0 ? "dotted" : "solid"}
@@ -117,35 +116,14 @@ const Calendar: FC<Props> = ({ date }) => {
                               candidate={
                                 candidates[formatDate(date)][formatTime(time)]
                               }
+                              date={date}
+                              time={time}
                               height={height}
                               index={index2}
-                              onClick={() => {
-                                setIsCendidateIn(false);
-                                deleteCandidate(
-                                  date,
-                                  time,
-                                  setCandidates,
-                                  candidates
-                                );
-                              }}
+                              candidates={candidates}
+                              setCandidates={setCandidates}
                             />
                           )}
-                        <Button
-                          height={`${height}px`}
-                          width="full"
-                          _hover={{ bg: "rgba(0,0,0,0.1)" }}
-                          backgroundColor="rgba(0,0,0,0)"
-                          onClick={() => {
-                            setCandidate(
-                              date,
-                              time,
-                              scheduleTime,
-                              setCandidates,
-                              candidates
-                            );
-                            setIsCendidateIn(true);
-                          }}
-                        ></Button>
                       </Box>
                     );
                   })}

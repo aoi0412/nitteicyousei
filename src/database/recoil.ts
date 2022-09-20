@@ -10,3 +10,13 @@ export const timeAtom = atom({
   key: "time",
   default: 60,
 });
+
+export const scheduleNameAtom = atom({
+  key: "scheduleName",
+  default: "",
+});
+
+export const memberNameAtom = atom({
+  key: "memberName",
+  default: "",
+});

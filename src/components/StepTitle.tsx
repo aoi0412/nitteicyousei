@@ -9,8 +9,8 @@ type Props = {
 const StepTitle: FC<Props> = ({ stepNum, children }) => {
   const [fontSize, setFontSize] = useState("auto");
   useEffect(() => {
-    const sizePx = (150 / stringWidth(children)) * 2;
-    setFontSize(`${sizePx}px`);
+    const sizePx = (200 / stringWidth(children)) * 2;
+    setFontSize(`${sizePx > 20 ? 20 : sizePx}px`);
   }, []);
   return (
     <Flex display="flex" flexDir="row" margin="1.5">

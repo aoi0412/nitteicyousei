@@ -9,7 +9,7 @@ const Step2 = () => {
   const [pageDate, setPageDate] = useState(new Date());
   return (
     <>
-      <Box height="60%" display="flex" flexDir="column" flexGrow={1}>
+      <Box paddingBottom="60px">
         <StepTitle stepNum={2}>会議予定の候補を入力</StepTitle>
         <Flex paddingLeft="4" margin="2">
           <IconButton

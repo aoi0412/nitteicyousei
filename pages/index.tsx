@@ -1,8 +1,24 @@
+import { Box, Text, Image, Flex } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
+import { useRouter } from "next/router";
+import { useLayoutEffect, useState } from "react";
+import Header from "../src/components/Header";
+import WideButton from "../src/components/WideButton";
+import { color } from "../src/styles/colors";
 
 const Home: NextPage = () => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
+  useLayoutEffect(() => {
+    setLoading(false);
+  }, []);
+  if (loading)
+    return (
+      <Box>
+        <Text>loading...</Text>
+      </Box>
+    );
   return (
     <div>
       <Head>
@@ -16,20 +32,105 @@ const Home: NextPage = () => {
         />
       </Head>
 
-      <main></main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      <main>
+        <Header />
+        <Box
+          display="flex"
+          justifyContent="center"
+          maxW="970px"
+          position="relative"
+          marginY="40px"
+          marginX="auto"
         >
-          Powered by{" "}
-          <span>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+          <Box
+            bg={color.sub}
+            maxH="500px"
+            height={window.innerWidth / 2}
+            marginLeft="15%"
+            width="100%"
+          />
+          <Box
+            top="0"
+            position="absolute"
+            marginLeft={-window.innerWidth / 5 - 50}
+          >
+            <Text
+              marginY="12px"
+              fontSize={
+                window.innerWidth > 800
+                  ? 800 * (30 / 500)
+                  : window.innerWidth * (30 / 500)
+              }
+              fontWeight="bold"
+            >
+              日程を調整しよう
+            </Text>
+            <Text
+              fontSize={
+                window.innerWidth > 800
+                  ? 800 * (20 / 500)
+                  : window.innerWidth * (20 / 500)
+              }
+              marginLeft="24px"
+            >
+              簡単操作で
+            </Text>
+            <Text
+              marginLeft="24px"
+              fontSize={
+                window.innerWidth > 800
+                  ? 800 * (20 / 500)
+                  : window.innerWidth * (20 / 500)
+              }
+            >
+              気軽にみんなで日程調整
+            </Text>
+          </Box>
+          <Image
+            position="absolute"
+            bottom="0"
+            right="0"
+            borderRadius="full"
+            width="30%"
+            margin="4"
+            src="https://bit.ly/dan-abramov"
+            alt="Dan Abramov"
+          />
+        </Box>
+        <WideButton onClick={() => router.push("/createSchedule")}>
+          使ってみる
+        </WideButton>
+        <Box display="flex" flexDir="column" alignItems="center">
+          <Text fontSize="32" as="b" margin="8">
+            使い方
+          </Text>
+          <Flex display="flex" alignItems="center" gap="4">
+            {["fnieoap", "fneiowaao", "nfioweapj"].map((text) => (
+              <Box
+                flexGrow={1}
+                display="flex"
+                flexDir="column"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Image
+                  bottom="0"
+                  right="0"
+                  borderRadius="full"
+                  width="24"
+                  // margin="4"
+                  src="https://bit.ly/dan-abramov"
+                  alt="Dan Abramov"
+                />
+                <Text textAlign="center" fontSize="20px" fontWeight="bold">
+                  タイトル
+                </Text>
+                <Text textAlign="center">ないよう内容{text}</Text>
+              </Box>
+            ))}
+          </Flex>
+        </Box>
+      </main>
     </div>
   );
 };

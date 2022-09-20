@@ -130,22 +130,6 @@ const Calendar: FC<Props> = ({ date }) => {
                               }}
                             />
                           )}
-                        <Button
-                          height={`${height}px`}
-                          width="full"
-                          _hover={{ bg: "rgba(0,0,0,0.1)" }}
-                          backgroundColor="rgba(0,0,0,0)"
-                          onClick={() => {
-                            setCandidate(
-                              date,
-                              time,
-                              scheduleTime,
-                              setCandidates,
-                              candidates
-                            );
-                            setIsCendidateIn(true);
-                          }}
-                        ></Button>
                       </Box>
                     );
                   })}

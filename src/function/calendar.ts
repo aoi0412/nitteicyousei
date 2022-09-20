@@ -53,16 +53,13 @@ export const formatTime = (data: { Hour: number; Minute: number }) => {
 };
 
 export const formatDate = (date: Date) => {
-  // const tmp = format(date, "yyyy/MM/dd");
   const tmp = date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate();
-  // console.log(date.getMonth(), ":", tmp);
   return tmp;
 };
 
 export const getJaWeekString = (weekList: Date[]) => {
   let jaWeekList: string[] = [];
   weekList.forEach((date) => {
-    // console.log("aaa");
     jaWeekList.push(format(date, "EEEEE", { locale: ja }));
   });
   return jaWeekList;
@@ -75,17 +72,14 @@ export const setCandidate = (
   setCandidates: (candidates: candidates) => void,
   candidates: candidates
 ) => {
-  console.log("time is", formatTime(time));
   let tmp = { ...candidates };
   let dateData = setHours(new Date(date), time.Hour);
   dateData = setMinutes(new Date(dateData), time.Minute);
-  console.log("dateData", dateData);
   const candidate: candidate = {
     startTime: dateData,
     scheduleTime: scheduleTime,
     members: [],
   };
-  console.log("dateData", dateData);
 
   if (!(formatDate(date) in tmp)) {
     tmp[formatDate(date)] = {};
@@ -93,8 +87,6 @@ export const setCandidate = (
     tmp[formatDate(date)] = { ...candidates[formatDate(date)] };
   }
   tmp[formatDate(date)][formatTime(time)] = candidate;
-
-  console.log("tmp is;", tmp);
 
   setCandidates(tmp);
 };

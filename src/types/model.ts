@@ -7,26 +7,23 @@ export type MyData = {
 export type scheduleData = {
   scheduleName: string;
   scheduleTime: number;
-  candidates: candidate[];
+  url: string | null;
+  candidates: candidates;
+  id: string;
 };
 
 export type candidates = {
   [date: string]: {
-    [time: string]: {
-      startTime: Date;
-      members: member[];
-      scheduleTime: number;
-    };
+    [time: string]: candidate;
   };
 };
 
 export type candidate = {
   startTime: Date;
-  scheduleTime: number; //time*30minute
+  scheduleTime: number;
   members: member[];
 };
 
 export type member = {
-  id: string;
   name: string;
 };

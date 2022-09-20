@@ -11,13 +11,13 @@ import {
 import { useState } from "react";
 import { color } from "../../styles/colors";
 import StepTitle from "../StepTitle";
-import { useSetRecoilState } from "recoil";
-import { timeAtom } from "../../database/recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { scheduleNameAtom, timeAtom } from "../../database/recoil";
 const Step1 = () => {
-  const [time, setTime] = useState(60);
-  const setMeetingTime = useSetRecoilState(timeAtom);
-  const handleChange = (a: string, value: number) => setTime(value);
-  const handleBlur = () => setMeetingTime(time);
+  const [time, setTime] = useRecoilState(timeAtom);
+  const [scheduleName, setScheduleName] = useRecoilState(scheduleNameAtom);
+  const handleChangeTime = (a: string, value: number) => setTime(value);
+  const handleChangeName = (value: string) => setScheduleName(value);
   return (
     <>
       <Box>
@@ -29,6 +29,8 @@ const Step1 = () => {
             variant="flushed"
             placeholder="会議名"
             _placeholder={{ color: color.dark }}
+            onChange={(e) => handleChangeName(e.target.value)}
+            value={scheduleName}
           />
           <NumberInput
             focusBorderColor={color.dark}
@@ -37,8 +39,7 @@ const Step1 = () => {
             size="md"
             maxW={24}
             step={30}
-            onBlur={handleBlur}
-            onChange={handleChange}
+            onChange={handleChangeTime}
             min={30}
             max={300}
           >
