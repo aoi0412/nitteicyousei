@@ -1,9 +1,9 @@
-import { collection, doc, setDoc } from "firebase/firestore";
-import { scheduleData } from "../../types/model";
+import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { candidates, scheduleData } from "../../types/model";
 import { db } from "../firebase";
-const baseURL = "http://localhost:3000";
+const baseURL = "https://nitteicyousei-65b1a.web.app/";
 export const saveSchedule = (data: scheduleData) => {
-  const URL: string = `${baseURL}/schedule/${data.id}`;
+  const URL: string = `${baseURL}/schedule/?scheduleID=${data.id}`;
   setDoc(doc(db, "schedules", data.id), {
     id: data.id,
     url: URL,
@@ -12,6 +12,12 @@ export const saveSchedule = (data: scheduleData) => {
     candidates: data.candidates,
   } as scheduleData);
   return { URL: URL, id: data.id };
+};
+
+export const updateCandidates = (id: string, candidates: candidates) => {
+  updateDoc(doc(db, "schedules", id), {
+    candidates: candidates,
+  });
 };
 
 export const getScheduleId = () => {

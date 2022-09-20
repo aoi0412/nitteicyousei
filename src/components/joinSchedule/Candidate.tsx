@@ -42,6 +42,7 @@ const Candidate: FC<Props> = ({
   const [isSelected, setIsSelected] = useState(false);
   const name = useRecoilValue(memberNameAtom);
   const onClick = (tmpName: string) => {
+    console.log(tmpName);
     if (tmpName) {
       if (isSelected) {
         deleteMember(tmpName);
@@ -61,12 +62,13 @@ const Candidate: FC<Props> = ({
     if (members.some((member) => member.name === name)) {
       members = members.filter((member) => member.name !== name);
     }
-    console.log("deleted", name, ":", members);
     const tmp: candidate = {
       ...candidate,
       members: members,
     };
     tmpC[formatDate(date)][formatTime(time)] = tmp;
+    console.log("deleted", name, ":", tmpC);
+
     setCandidates(tmpC);
   };
   const addMember = (name: string) => {
@@ -76,13 +78,14 @@ const Candidate: FC<Props> = ({
     if (!members.some((member) => member.name === name)) {
       members.push({ name: name });
     }
-    console.log("added", name, ":", members);
 
     const tmp: candidate = {
       ...candidate,
       members: members,
     };
     tmpC[formatDate(date)][formatTime(time)] = tmp;
+    console.log("added", name, ":", tmpC);
+
     setCandidates(tmpC);
   };
 
@@ -96,20 +99,24 @@ const Candidate: FC<Props> = ({
     if (!members.some((member) => member.name === after)) {
       members.push({ name: after });
     }
-    console.log("updated", before, "=>", after, ":", members);
 
     const tmp: candidate = {
       ...candidate,
       members: members,
     };
     tmpC[formatDate(date)][formatTime(time)] = tmp;
+    console.log("updated", before, "=>", after, ":", tmpC);
+
     setCandidates(tmpC);
   };
   useEffect(() => {
-    if (isSelected) {
-      updateMember(nameRef.current, name);
+    if (name == "" && nameRef.current !== "") {
+    } else {
+      if (isSelected) {
+        updateMember(nameRef.current, name);
+      }
+      nameRef.current = name;
     }
-    nameRef.current = name;
   }, [name]);
   return (
     <Button

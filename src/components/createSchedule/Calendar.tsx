@@ -60,6 +60,7 @@ const Calendar: FC<Props> = ({ date }) => {
                   borderColor={color.dark}
                   padding="0"
                   margin="0"
+                  key={dayOfWeek}
                 >
                   <Text>{weekList[index].getDate()}</Text>
                   <Text>{dayOfWeek}</Text>
@@ -82,6 +83,7 @@ const Calendar: FC<Props> = ({ date }) => {
                   height={`${height}px`}
                   verticalAlign="center"
                   fontSize="sm"
+                  key={data.Hour + data.Minute}
                 >
                   {formatTime(data)}
                 </Text>
@@ -90,6 +92,7 @@ const Calendar: FC<Props> = ({ date }) => {
             {weekList.map((date) => {
               return (
                 <Td
+                  key={date.toString()}
                   display="flex"
                   flexGrow={1}
                   flexDir="column"
@@ -100,9 +103,10 @@ const Calendar: FC<Props> = ({ date }) => {
                   overflow="hidden"
                 >
                   {minuteList.map((time, index2) => {
-                    const [isCandidateIn, setIsCendidateIn] = useState(false);
+                    // const [isCandidateIn, setIsCendidateIn] = useState(false);
                     return (
                       <Box
+                        key={time.Hour + time.Minute}
                         borderBottomStyle={index2 % 2 == 0 ? "dotted" : "solid"}
                         borderBottomWidth="thin"
                         borderColor={color.dark}
@@ -120,7 +124,6 @@ const Calendar: FC<Props> = ({ date }) => {
                               height={height}
                               index={index2}
                               onClick={() => {
-                                setIsCendidateIn(false);
                                 deleteCandidate(
                                   date,
                                   time,
@@ -143,7 +146,6 @@ const Calendar: FC<Props> = ({ date }) => {
                               setCandidates,
                               candidates
                             );
-                            setIsCendidateIn(true);
                           }}
                         ></Button>
                       </Box>

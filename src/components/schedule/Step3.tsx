@@ -18,7 +18,6 @@ import {
 import { Router, useRouter } from "next/router";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import createSchedule from "../../../pages/createSchedule";
 import {
   getScheduleId,
   saveSchedule,

@@ -97,7 +97,7 @@ const Home: NextPage = () => {
             alt="Dan Abramov"
           />
         </Box>
-        <WideButton onClick={() => router.push("/createSchedule")}>
+        <WideButton onClick={() => router.push("createSchedule")}>
           使ってみる
         </WideButton>
         <Box display="flex" flexDir="column" alignItems="center">
@@ -112,6 +112,7 @@ const Home: NextPage = () => {
                 flexDir="column"
                 alignItems="center"
                 justifyContent="center"
+                key={text}
               >
                 <Image
                   bottom="0"

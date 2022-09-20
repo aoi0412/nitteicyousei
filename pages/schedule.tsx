@@ -1,33 +1,29 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Flex, Icon, IconButton, Input, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, IconButton, Text } from "@chakra-ui/react";
 import { addWeeks, subWeeks } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import Header from "../../src/components/Header";
-import Calendar from "../../src/components/joinSchedule/Calendar";
-import StepTitle from "../../src/components/StepTitle";
-import WideButton from "../../src/components/WideButton";
-import { updateCandidates } from "../../src/database/functions/createSchedule";
-import { getScheduleData } from "../../src/database/functions/getData";
+import Header from "../src/components/Header";
+import Calendar from "../src/components/schedule/Calendar";
+import WideButton from "../src/components/WideButton";
+import { getScheduleData } from "../src/database/functions/getData";
 import {
   candidatesAtom,
-  memberNameAtom,
   scheduleNameAtom,
   timeAtom,
-} from "../../src/database/recoil";
-import { color } from "../../src/styles/colors";
+} from "../src/database/recoil";
+import { color } from "../src/styles/colors";
 
-const ChangeSchedule = () => {
-  const [name, setName] = useRecoilState(memberNameAtom);
-  const [tmpName, setTmpName] = useState("");
+const SchedulePage = () => {
   const router = useRouter();
   const { scheduleID } = router.query;
-  const [pageDate, setPageDate] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(true);
-  const [candidates, setCandidates] = useRecoilState(candidatesAtom);
-  const [scheduleName, setScheduleName] = useRecoilState(scheduleNameAtom);
+  const setCandidates = useSetRecoilState(candidatesAtom);
+  const [name, setName] = useRecoilState(scheduleNameAtom);
   const setTime = useSetRecoilState(timeAtom);
+  const [pageDate, setPageDate] = useState(new Date());
+
   useLayoutEffect(() => {
     if (scheduleID) {
       getScheduleData(scheduleID as string).then((data) => {
@@ -46,24 +42,12 @@ const ChangeSchedule = () => {
       </Box>
     );
   return (
-    <Box height={window.innerHeight} width={window.innerWidth}>
+    <Box height={window.innerHeight}>
       <Header />
-      <Box maxW="970px" marginX="auto" position="relative">
-        <StepTitle stepNum={1}>自分の名前を入力</StepTitle>
-        <Box marginX="10%">
-          <Input
-            focusBorderColor={color.dark}
-            color={color.dark}
-            variant="flushed"
-            placeholder="自分の名前"
-            _placeholder={{ color: color.dark }}
-            onChange={(e) => setTmpName(e.target.value)}
-            onBlur={() => setName(tmpName)}
-            value={tmpName}
-            margin="4"
-          />
-        </Box>
-        <StepTitle stepNum={2}>候補から参加できる日時を選択</StepTitle>
+      <Box maxW="970px" marginX="auto">
+        <Text margin="4" fontSize="32px" fontWeight="bold" textAlign="center">
+          {name}
+        </Text>
         <Flex paddingLeft="4" margin="2">
           <IconButton
             bg="white"
@@ -91,23 +75,17 @@ const ChangeSchedule = () => {
         </Flex>
         <Calendar date={pageDate} />
         <Box
-          zIndex={99}
           position="fixed"
-          bottom="20px"
-          width="full"
-          margin="0"
-          display="flex"
-          alignItems="flex-end"
-          maxW="970px"
+          bottom="0"
+          width="100%"
+          bg="white"
+          paddingY="8"
+          zIndex="99"
         >
           <WideButton
-            onClick={() => {
-              console.log(candidates);
-              updateCandidates(scheduleID as string, candidates);
-              router.back();
-            }}
+            onClick={() => router.push(`/joinInSchedule/${scheduleID}`)}
           >
-            決定
+            自分の予定を入力する
           </WideButton>
         </Box>
       </Box>
@@ -115,4 +93,4 @@ const ChangeSchedule = () => {
   );
 };
 
-export default ChangeSchedule;
+export default SchedulePage;

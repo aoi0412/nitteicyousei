@@ -18,7 +18,6 @@ import {
 import { Router, useRouter } from "next/router";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import createSchedule from "../../../pages/createSchedule";
 import {
   getScheduleId,
   saveSchedule,
@@ -153,7 +152,7 @@ const Step3 = () => {
               color="white"
               onClick={() => {
                 onClose();
-                router.push(`/schedule/${id}`);
+                router.push(`/schedule/?scheduleID=${id}`);
               }}
               _hover={{ bg: color.mainHover }}
             >
