@@ -18,6 +18,7 @@ const WideButton: FC<Props> = ({ children, onClick }) => {
       width="80%"
       marginX="10%"
       onClick={onClick}
+      paddingX="24"
     >
       {children}
     </Button>

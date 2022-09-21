@@ -1,5 +1,13 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Flex, Icon, IconButton, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Fade,
+  Flex,
+  Icon,
+  IconButton,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import { addWeeks, subWeeks } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useState } from "react";
@@ -19,21 +27,21 @@ import {
 import { color } from "../../src/styles/colors";
 
 const ChangeSchedule = () => {
-  const [name, setName] = useRecoilState(memberNameAtom);
+  const setName = useSetRecoilState(memberNameAtom);
   const [tmpName, setTmpName] = useState("");
   const router = useRouter();
   const { scheduleID } = router.query;
   const [pageDate, setPageDate] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(true);
   const [candidates, setCandidates] = useRecoilState(candidatesAtom);
-  const [scheduleName, setScheduleName] = useRecoilState(scheduleNameAtom);
+  const setScheduleName = useSetRecoilState(memberNameAtom);
   const setTime = useSetRecoilState(timeAtom);
   useLayoutEffect(() => {
     if (scheduleID) {
       getScheduleData(scheduleID as string).then((data) => {
         const scheduleData = data.data();
         setCandidates(scheduleData?.candidates);
-        setName(scheduleData?.scheduleName);
+        setScheduleName(scheduleData?.scheduleName);
         setTime(scheduleData?.scheduleTime);
       });
       setLoading(false);
@@ -98,17 +106,20 @@ const ChangeSchedule = () => {
           margin="0"
           display="flex"
           alignItems="flex-end"
+          justifyContent="center"
           maxW="970px"
         >
-          <WideButton
-            onClick={() => {
-              console.log(candidates);
-              updateCandidates(scheduleID as string, candidates);
-              router.back();
-            }}
-          >
-            決定
-          </WideButton>
+          <Fade in={tmpName ? true : false}>
+            <WideButton
+              onClick={() => {
+                console.log(candidates);
+                updateCandidates(scheduleID as string, candidates);
+                router.back();
+              }}
+            >
+              決定
+            </WideButton>
+          </Fade>
         </Box>
       </Box>
     </Box>
