@@ -115,6 +115,7 @@ const SchedulePage = () => {
             <TabPanel>
               {showCanditateList().map((candidate) => (
                 <Candidate
+                  key={candidate.startTime.toString()}
                   position="relative"
                   candidate={candidate}
                   index={1}
@@ -128,6 +129,7 @@ const SchedulePage = () => {
               {members.length ? (
                 members.map((member) => (
                   <Button
+                    key={member}
                     onClick={() => {
                       console.log("setted", member);
                       setName(member);
