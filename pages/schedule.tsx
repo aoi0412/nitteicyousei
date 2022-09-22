@@ -95,6 +95,7 @@ const SchedulePage = () => {
             <TabList>
               {["カレンダー", "候補一覧", "メンバー一覧"].map((text) => (
                 <Tab
+                  key={text}
                   color="gray.200"
                   _selected={{ color: color.main, borderColor: color.main }}
                 >
