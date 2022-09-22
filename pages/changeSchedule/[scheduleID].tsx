@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import Header from "../../src/components/Header";
 import StepTitle from "../../src/components/StepTitle";
 import WideButton from "../../src/components/WideButton";
@@ -6,7 +7,6 @@ import WideButton from "../../src/components/WideButton";
 const ChangeSchedule = () => {
   const router = useRouter();
   const { scheduleID } = router.query;
-
   return (
     <div>
       <Header />

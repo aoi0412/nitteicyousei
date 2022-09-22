@@ -36,9 +36,17 @@ const Calendar: FC<Props> = ({ date }) => {
   const [candidates, setCandidates] = useRecoilState(candidatesAtom);
   const scheduleTime = useRecoilValue(timeAtom);
   return (
-    <TableContainer width="full" padding="4">
-      <Table>
-        <Thead padding="0">
+    <TableContainer width="full" padding="4" paddingTop="0">
+      <Table display="flex" flexDir="column" position="relative">
+        <Thead
+          padding="0"
+          position="fixed"
+          width="full"
+          maxW="970px"
+          paddingRight="49px"
+          bg="white"
+          zIndex={99}
+        >
           <Tr display="flex" padding="0">
             <Th
               borderRightWidth="thin"
@@ -69,7 +77,7 @@ const Calendar: FC<Props> = ({ date }) => {
             })}
           </Tr>
         </Thead>
-        <Tbody>
+        <Tbody marginTop="30px" padding="0">
           <Tr display="flex">
             <Td
               padding="0"

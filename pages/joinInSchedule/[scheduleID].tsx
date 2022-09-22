@@ -46,50 +46,69 @@ const ChangeSchedule = () => {
       </Box>
     );
   return (
-    <Box height={window.innerHeight} width={window.innerWidth}>
+    <Box
+      height={window.innerHeight}
+      display="flex"
+      flexDir="column"
+      width="100%"
+    >
       <Header />
-      <Box maxW="970px" marginX="auto" position="relative">
-        <StepTitle stepNum={1}>自分の名前を入力</StepTitle>
-        <Box marginX="10%">
-          <Input
-            focusBorderColor={color.dark}
-            color={color.dark}
-            variant="flushed"
-            placeholder="自分の名前"
-            _placeholder={{ color: color.dark }}
-            onChange={(e) => setTmpName(e.target.value)}
-            onBlur={() => setName(tmpName)}
-            value={tmpName}
-            margin="4"
-          />
+      <Box
+        maxW="970px"
+        marginX="auto"
+        display="flex"
+        flex="1"
+        width="100%"
+        flexDir="column"
+        marginBottom="60px"
+      >
+        <Box display="flex" flexDir="column">
+          <StepTitle stepNum={1}>自分の名前を入力</StepTitle>
+          <Box marginX="10%">
+            <Input
+              focusBorderColor={color.dark}
+              color={color.dark}
+              variant="flushed"
+              placeholder="自分の名前"
+              _placeholder={{ color: color.dark }}
+              onChange={(e) => setTmpName(e.target.value)}
+              onBlur={() => setName(tmpName)}
+              value={tmpName}
+              margin="4"
+            />
+          </Box>
+          <StepTitle stepNum={2}>候補から参加できる日時を選択</StepTitle>
+          <Flex paddingLeft="4" margin="2">
+            <IconButton
+              bg="white"
+              _hover={{ bg: "rgba(0,0,0,0)" }}
+              size="sm"
+              aria-label="left-arrow"
+              icon={<Icon as={ChevronLeftIcon} w="8" h="8" />}
+              onClick={() => {
+                setPageDate(subWeeks(pageDate, 1));
+              }}
+            />
+            <IconButton
+              bg="white"
+              _hover={{ bg: "rgba(0,0,0,0)" }}
+              size="sm"
+              aria-label="left-arrow"
+              icon={<Icon as={ChevronRightIcon} w="8" h="8" />}
+              onClick={() => {
+                setPageDate(addWeeks(pageDate, 1));
+              }}
+            />
+            <Text fontSize="20" fontWeight="bold" color={color.dark}>
+              {pageDate.getFullYear() + " " + pageDate.getMonth() + "月"}
+            </Text>
+          </Flex>
         </Box>
-        <StepTitle stepNum={2}>候補から参加できる日時を選択</StepTitle>
-        <Flex paddingLeft="4" margin="2">
-          <IconButton
-            bg="white"
-            _hover={{ bg: "rgba(0,0,0,0)" }}
-            size="sm"
-            aria-label="left-arrow"
-            icon={<Icon as={ChevronLeftIcon} w="8" h="8" />}
-            onClick={() => {
-              setPageDate(subWeeks(pageDate, 1));
-            }}
-          />
-          <IconButton
-            bg="white"
-            _hover={{ bg: "rgba(0,0,0,0)" }}
-            size="sm"
-            aria-label="left-arrow"
-            icon={<Icon as={ChevronRightIcon} w="8" h="8" />}
-            onClick={() => {
-              setPageDate(addWeeks(pageDate, 1));
-            }}
-          />
-          <Text fontSize="20" fontWeight="bold" color={color.dark}>
-            {pageDate.getFullYear() + " " + pageDate.getMonth() + "月"}
-          </Text>
-        </Flex>
-        <Calendar date={pageDate} />
+        <Box display="flex" flexGrow={1} overflowY="scroll" position="relative">
+          <Box position="absolute" width="100%" top="0">
+            <Calendar date={pageDate} />
+          </Box>
+        </Box>
         <Box
           zIndex={99}
           position="fixed"

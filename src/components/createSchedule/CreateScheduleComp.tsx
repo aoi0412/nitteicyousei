@@ -17,9 +17,22 @@ const CreateScheduleComp = () => {
       </Box>
     );
   return (
-    <Box height={window.innerHeight}>
+    <Box
+      height={window.innerHeight}
+      display="flex"
+      flexDir="column"
+      width="100%"
+    >
       <Header />
-      <Box maxW="970px" marginX="auto">
+      <Box
+        maxW="970px"
+        marginX="auto"
+        display="flex"
+        flex="1"
+        width="100%"
+        flexDir="column"
+        marginBottom="60px"
+      >
         <Step1 />
         <Step2 />
         <Step3 />
