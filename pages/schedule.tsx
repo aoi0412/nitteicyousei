@@ -73,6 +73,10 @@ const SchedulePage = () => {
       display="flex"
       flexDir="column"
       width="100%"
+      margin="0"
+      padding="0"
+      marginTop="-70px"
+      paddingTop="60px"
     >
       <Header />
       <Box
@@ -83,25 +87,25 @@ const SchedulePage = () => {
         width="100%"
         flexDir="column"
       >
-        <Box display="flex" flexDir="column">
+        <Box display="flex" flexDir="column" flexGrow={1}>
           <Text margin="4" fontSize="32px" fontWeight="bold" textAlign="center">
             {scheduleName}
           </Text>
-          <Tabs isFitted justifyContent="center">
-          <TabList>
-            {["カレンダー", "候補一覧", "メンバー一覧"].map((text) => (
-              <Tab
-                color="gray.200"
-                _selected={{ color: color.main, borderColor: color.main }}
-              >
-                {text}
-              </Tab>
-            ))}
-          </TabList>
-          <TabPanels>
-            {/* カレンダー */}
-            <TabPanel>
-              <Flex paddingLeft="4" margin="2">
+          <Tabs display="flex" flexDir="column" flex={1} isFitted>
+            <TabList>
+              {["カレンダー", "候補一覧", "メンバー一覧"].map((text) => (
+                <Tab
+                  color="gray.200"
+                  _selected={{ color: color.main, borderColor: color.main }}
+                >
+                  {text}
+                </Tab>
+              ))}
+            </TabList>
+            <TabPanels display="flex" flexGrow={1} flexDir="column">
+              {/* カレンダー */}
+              <TabPanel padding="0" display="flex" flexDir="column" flex={1}>
+                <Flex paddingLeft="4" margin="2">
                   <IconButton
                     bg="white"
                     _hover={{ bg: "rgba(0,0,0,0)" }}
@@ -126,73 +130,70 @@ const SchedulePage = () => {
                     {pageDate.getFullYear() + " " + pageDate.getMonth() + "月"}
                   </Text>
                 </Flex>
-        <Box display="flex" flexGrow={1} overflowY="scroll" position="relative">
-          <Box position="absolute" width="100%" top="0">
-                  <Calendar date={pageDate} />
-          </Box>
-        </Box>
-            </TabPanel>
-            {/* 候補一覧 */}
-            <TabPanel>
-              {showCanditateList().map((candidate) => (
-                <Candidate
-                  key={candidate.startTime.toString()}
+                <Box
+                  display="flex"
+                  flexGrow={1}
+                  overflowY="scroll"
                   position="relative"
-                  candidate={candidate}
-                  index={1}
-                  height={40}
-                  width={40}
-                />
-              ))}
-            </TabPanel>
-            {/* メンバー一覧 */}
-            <TabPanel>
-              {members.length ? (
-                members.map((member) => (
-                  <Button
-                    key={member}
-                    onClick={() => {
-                      console.log("setted", member);
-                      setName(member);
-                      router.push(`/joinInSchedule/${scheduleID}`);
-                    }}
-                  >
-                    <Text>{member}</Text>
-                  </Button>
-                ))
-              ) : (
-                <Text>メンバーはまだいません</Text>
-              )}
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
-      <Box
-        // position="fixed"
-        bottom="0"
-          right="0%"
-          left="0%"
-          translateX="-0%"
-          translateY="-0%"
-          alignSelf="center"
+                >
+                  <Box position="absolute" width="100%" top="0">
+                    <Calendar date={pageDate} />
+                  </Box>
+                </Box>
+              </TabPanel>
+              {/* 候補一覧 */}
+              <TabPanel>
+                {showCanditateList().map((candidate) => (
+                  <Candidate
+                    key={candidate.startTime.toString()}
+                    position="relative"
+                    candidate={candidate}
+                    index={1}
+                    height={40}
+                    width={40}
+                  />
+                ))}
+              </TabPanel>
+              {/* メンバー一覧 */}
+              <TabPanel>
+                {members.length ? (
+                  members.map((member) => (
+                    <Button
+                      key={member}
+                      onClick={() => {
+                        console.log("setted", member);
+                        setName(member);
+                        router.push(`/joinInSchedule/${scheduleID}`);
+                      }}
+                    >
+                      <Text>{member}</Text>
+                    </Button>
+                  ))
+                ) : (
+                  <Text>メンバーはまだいません</Text>
+                )}
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
+        <Box
+          zIndex={99}
+          width="full"
+          margin="0"
           display="flex"
-        width={window.innerWidth}
-        margin="0"
-          alignItems="center"
+          alignItems="flex-end"
           justifyContent="center"
-        bg="white"
-        paddingY="8"
-        zIndex="99"
-        display="flex"
-        justifyContent="center"
-      >
-        <WideButton
-          onClick={() => {
-            router.push(`/joinInSchedule/${scheduleID}`);
-          }}
+          paddingY="8"
+          maxW="970px"
         >
-          自分の予定を入力する
-        </WideButton>
+          <WideButton
+            onClick={() => {
+              router.push(`/joinInSchedule/${scheduleID}`);
+            }}
+          >
+            自分の予定を入力する
+          </WideButton>
+        </Box>
       </Box>
     </Box>
   );

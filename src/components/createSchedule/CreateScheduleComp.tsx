@@ -22,6 +22,8 @@ const CreateScheduleComp = () => {
       display="flex"
       flexDir="column"
       width="100%"
+      marginTop="-70px"
+      paddingTop="60px"
     >
       <Header />
       <Box

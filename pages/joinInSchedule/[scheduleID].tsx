@@ -74,6 +74,8 @@ const ChangeSchedule = () => {
       display="flex"
       flexDir="column"
       width="100%"
+      marginTop="-70px"
+      paddingTop="60px"
     >
       <Header />
       <Box
@@ -83,7 +85,6 @@ const ChangeSchedule = () => {
         flex="1"
         width="100%"
         flexDir="column"
-        marginBottom="60px"
       >
         <Box display="flex" flexDir="column">
           <StepTitle stepNum={1}>自分の名前を入力</StepTitle>
