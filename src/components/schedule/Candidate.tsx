@@ -11,6 +11,7 @@ import {
   Icon,
   Box,
   Flex,
+  ResponsiveValue,
 } from "@chakra-ui/react";
 import { FC } from "react";
 import { color } from "../../styles/colors";
@@ -18,13 +19,23 @@ import { candidate } from "../../types/model";
 import { addMinutes, format } from "date-fns";
 import { Timestamp } from "firebase/firestore";
 import { CheckIcon, SunIcon } from "@chakra-ui/icons";
+import { useRecoilValue } from "recoil";
+import { membersAtom } from "../../database/recoil";
 
 type Props = {
   candidate: candidate;
   index: number;
   height: number;
+  width?: number;
+  position?: "relative" | "absolute" | "fixed";
 };
-const Candidate: FC<Props> = ({ candidate, height, index }) => {
+const Candidate: FC<Props> = ({
+  candidate,
+  height,
+  index,
+  width,
+  position,
+}) => {
   const formatTimeRange = () => {
     let startTime = candidate.startTime;
     if (Object.prototype.toString.call(startTime) !== "[object Date]") {
@@ -32,17 +43,39 @@ const Candidate: FC<Props> = ({ candidate, height, index }) => {
     }
     const tmp: Date = addMinutes(startTime, candidate.scheduleTime);
 
-    return format(startTime, "hh':'mm") + "~" + format(tmp, "hh':'mm");
+    return (
+      format(startTime, "M'/'d' ") +
+      format(startTime, "hh':'mm") +
+      "~" +
+      format(tmp, "hh':'mm")
+    );
   };
+  const members = useRecoilValue(membersAtom);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const bgColor = () => {
+    let tmp = color.dark;
+    const ratio = candidate.members.length / members.length;
+    if (ratio < 0.25) {
+      tmp = color.sub;
+    } else if (ratio < 0.5) {
+      tmp = color.mainHover;
+    } else if (ratio < 0.75) {
+      tmp = color.main;
+    } else if (ratio == 1) {
+      tmp = "green.300";
+    } else {
+      tmp = color.accent;
+    }
+    return tmp;
+  };
   return (
     <>
       <Button
-        position="absolute"
+        position={position ? position : "absolute"}
+        width={width ? width : "auto"}
         zIndex={index + 1}
-        bg={color.main}
-        _hover={{ bg: color.main }}
+        bg={bgColor()}
+        _hover={{ bg: "rgba(0,0,0,0.2)" }}
         padding="0"
         margin="0"
         height={`${(candidate.scheduleTime * height) / 30}px`}

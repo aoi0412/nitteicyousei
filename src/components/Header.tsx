@@ -14,6 +14,10 @@ const Header = () => {
         flexDirection: "row",
         alignItems: "center",
         padding: 8,
+        position: "fixed",
+        top: 0,
+        width: "100%",
+        zIndex: 99,
       }}
     >
       <Box

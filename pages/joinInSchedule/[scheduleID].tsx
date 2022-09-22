@@ -31,7 +31,7 @@ import { color } from "../../src/styles/colors";
 const ChangeSchedule = () => {
   const toast = useToast();
   const [name, setName] = useRecoilState(memberNameAtom);
-  const [tmpName, setTmpName] = useState(name);
+  const [tmpName, setTmpName] = useState("");
   const router = useRouter();
   const { scheduleID } = router.query;
   const [pageDate, setPageDate] = useState(new Date());
@@ -49,6 +49,10 @@ const ChangeSchedule = () => {
         setMembers(scheduleData?.members);
         setTime(scheduleData?.scheduleTime);
       });
+      console.log(name);
+      if (name) {
+        setTmpName(name);
+      }
       setLoading(false);
     }
   }, [scheduleID]);
@@ -144,7 +148,9 @@ const ChangeSchedule = () => {
               onClick={() => {
                 console.log(candidates);
                 let tmp: string[] = [...members];
-                tmp.push(tmpName);
+                if (!tmp.find((tmpdata) => tmpdata === tmpName)) {
+                  tmp.push(tmpName);
+                }
                 updateCandidates(scheduleID as string, candidates, tmp);
                 setName("");
                 router.back();
