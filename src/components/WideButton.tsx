@@ -16,6 +16,7 @@ const WideButton: FC<Props> = ({ children, onClick }) => {
       _hover={{ bg: color.mainHover }}
       borderRadius="full"
       width="80%"
+      maxW="500px"
       marginX="10%"
       onClick={onClick}
       paddingX="24"

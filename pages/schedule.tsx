@@ -77,22 +77,25 @@ const SchedulePage = () => {
           </Text>
         </Flex>
         <Calendar date={pageDate} />
-        <Box
-          position="fixed"
-          bottom="0"
-          width="100%"
-          bg="white"
-          paddingY="8"
-          zIndex="99"
+      </Box>
+      <Box
+        position="fixed"
+        bottom="0"
+        width={window.innerWidth}
+        margin="0"
+        bg="white"
+        paddingY="8"
+        zIndex="99"
+        display="flex"
+        justifyContent="center"
+      >
+        <WideButton
+          onClick={() => {
+            router.push(`/joinInSchedule/${scheduleID}`);
+          }}
         >
-          <WideButton
-            onClick={() => {
-              router.push(`/joinInSchedule/${scheduleID}`);
-            }}
-          >
-            自分の予定を入力する
-          </WideButton>
-        </Box>
+          自分の予定を入力する
+        </WideButton>
       </Box>
     </Box>
   );
