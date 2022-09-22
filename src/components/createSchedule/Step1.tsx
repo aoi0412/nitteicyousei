@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   Input,
   NumberDecrementStepper,
@@ -8,15 +9,26 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { FocusEvent, useState } from "react";
 import { color } from "../../styles/colors";
 import StepTitle from "../StepTitle";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { scheduleNameAtom, timeAtom } from "../../database/recoil";
 const Step1 = () => {
-  const [time, setTime] = useRecoilState(timeAtom);
+  const setTime = useSetRecoilState(timeAtom);
+  const [tmpTime, setTmpTime] = useState(60);
   const [scheduleName, setScheduleName] = useRecoilState(scheduleNameAtom);
-  const handleChangeTime = (a: string, value: number) => setTime(value);
+  const handleChangeTime = () => {
+    let tmp = tmpTime;
+    tmp = tmp - (tmp % 30);
+    if (tmp % 30 == 0) {
+      setTmpTime(tmp);
+      setTime(tmp);
+    } else {
+      setTmpTime(60);
+      setTime(60);
+    }
+  };
   const handleChangeName = (value: string) => setScheduleName(value);
   return (
     <>
@@ -35,11 +47,12 @@ const Step1 = () => {
           <NumberInput
             focusBorderColor={color.dark}
             color={color.dark}
-            value={time}
+            value={tmpTime}
             size="md"
             maxW={24}
             step={30}
-            onChange={handleChangeTime}
+            onChange={(a, b) => setTmpTime(b)}
+            onBlurCapture={() => handleChangeTime()}
             min={30}
             max={300}
           >

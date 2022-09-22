@@ -20,3 +20,8 @@ export const memberNameAtom = atom({
   key: "memberName",
   default: "",
 });
+
+export const membersAtom = atom({
+  key: "members",
+  default: [],
+});

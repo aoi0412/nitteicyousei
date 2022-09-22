@@ -7,11 +7,12 @@ import {
   IconButton,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { addWeeks, subWeeks } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import Header from "../../src/components/Header";
 import Calendar from "../../src/components/joinSchedule/Calendar";
 import StepTitle from "../../src/components/StepTitle";
@@ -21,27 +22,31 @@ import { getScheduleData } from "../../src/database/functions/getData";
 import {
   candidatesAtom,
   memberNameAtom,
+  membersAtom,
   scheduleNameAtom,
   timeAtom,
 } from "../../src/database/recoil";
 import { color } from "../../src/styles/colors";
 
 const ChangeSchedule = () => {
-  const setName = useSetRecoilState(memberNameAtom);
-  const [tmpName, setTmpName] = useState("");
+  const toast = useToast();
+  const [name, setName] = useRecoilState(memberNameAtom);
+  const [tmpName, setTmpName] = useState(name);
   const router = useRouter();
   const { scheduleID } = router.query;
   const [pageDate, setPageDate] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(true);
   const [candidates, setCandidates] = useRecoilState(candidatesAtom);
-  const setScheduleName = useSetRecoilState(memberNameAtom);
+  const setScheduleName = useSetRecoilState(scheduleNameAtom);
   const setTime = useSetRecoilState(timeAtom);
+  const [members, setMembers] = useRecoilState(membersAtom);
   useLayoutEffect(() => {
     if (scheduleID) {
       getScheduleData(scheduleID as string).then((data) => {
         const scheduleData = data.data();
         setCandidates(scheduleData?.candidates);
         setScheduleName(scheduleData?.scheduleName);
+        setMembers(scheduleData?.members);
         setTime(scheduleData?.scheduleTime);
       });
       setLoading(false);
@@ -53,6 +58,12 @@ const ChangeSchedule = () => {
         <Text>loading...</Text>
       </Box>
     );
+  const tmpNameInMembers = () => {
+    return members.find((name) => name === tmpName);
+  };
+  const nameInMembers = () => {
+    return members.find((member) => member === name);
+  };
   return (
     <Box height={window.innerHeight} width={window.innerWidth}>
       <Header />
@@ -60,13 +71,32 @@ const ChangeSchedule = () => {
         <StepTitle stepNum={1}>自分の名前を入力</StepTitle>
         <Box marginX="10%">
           <Input
+            isDisabled={tmpNameInMembers() && nameInMembers()}
             focusBorderColor={color.dark}
             color={color.dark}
             variant="flushed"
             placeholder="自分の名前"
             _placeholder={{ color: color.dark }}
             onChange={(e) => setTmpName(e.target.value)}
-            onBlur={() => setName(tmpName)}
+            isInvalid={!(tmpNameInMembers() === nameInMembers())}
+            onBlur={() => {
+              console.log(members, tmpNameInMembers(), nameInMembers());
+              if (tmpNameInMembers() && !nameInMembers()) {
+                toast({
+                  title: "既に登録したメンバーです",
+                  description:
+                    "既存のメンバーの内容を変更したい場合はスケジュールページのメンバー一覧から行ってください",
+                  status: "warning",
+                  // size: "sm",
+                });
+              } else if (!tmpNameInMembers() && nameInMembers()) {
+                console.log("ありえない！！", name, tmpName);
+                setName("");
+                setTmpName("");
+              } else {
+                setName(tmpName);
+              }
+            }}
             value={tmpName}
             margin="4"
           />
@@ -109,11 +139,14 @@ const ChangeSchedule = () => {
           justifyContent="center"
           maxW="970px"
         >
-          <Fade in={tmpName ? true : false}>
+          <Fade in={tmpName ? true : false} unmountOnExit>
             <WideButton
               onClick={() => {
                 console.log(candidates);
-                updateCandidates(scheduleID as string, candidates);
+                let tmp: string[] = [...members];
+                tmp.push(tmpName);
+                updateCandidates(scheduleID as string, candidates, tmp);
+                setName("");
                 router.back();
               }}
             >

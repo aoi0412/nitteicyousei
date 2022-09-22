@@ -15,6 +15,8 @@ import {
   useToast,
   Tooltip,
   Fade,
+  Show,
+  Hide,
 } from "@chakra-ui/react";
 import { Router, useRouter } from "next/router";
 import { useState } from "react";
@@ -73,6 +75,7 @@ const Step3 = () => {
     setId(result.id);
     onOpen();
   };
+
   return (
     <Box
       zIndex={99}
@@ -85,7 +88,10 @@ const Step3 = () => {
       justifyContent="center"
       maxW="970px"
     >
-      <Fade in={candidates && name ? true : false}>
+      <Fade
+        unmountOnExit
+        in={Object.keys(candidates).length !== 0 && name ? true : false}
+      >
         <WideButton onClick={create}>スケージュールを作成</WideButton>
       </Fade>
       <Modal

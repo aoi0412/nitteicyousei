@@ -10,6 +10,7 @@ import WideButton from "../src/components/WideButton";
 import { getScheduleData } from "../src/database/functions/getData";
 import {
   candidatesAtom,
+  membersAtom,
   scheduleNameAtom,
   timeAtom,
 } from "../src/database/recoil";
@@ -23,6 +24,7 @@ const SchedulePage = () => {
   const [name, setName] = useRecoilState(scheduleNameAtom);
   const setTime = useSetRecoilState(timeAtom);
   const [pageDate, setPageDate] = useState(new Date());
+  const setMembers = useSetRecoilState(membersAtom);
 
   useLayoutEffect(() => {
     if (scheduleID) {
@@ -31,6 +33,7 @@ const SchedulePage = () => {
         setCandidates(scheduleData?.candidates);
         setName(scheduleData?.scheduleName);
         setTime(scheduleData?.scheduleTime);
+        setMembers(scheduleData?.members);
       });
       setLoading(false);
     }
@@ -83,7 +86,9 @@ const SchedulePage = () => {
           zIndex="99"
         >
           <WideButton
-            onClick={() => router.push(`/joinInSchedule/${scheduleID}`)}
+            onClick={() => {
+              router.push(`/joinInSchedule/${scheduleID}`);
+            }}
           >
             自分の予定を入力する
           </WideButton>

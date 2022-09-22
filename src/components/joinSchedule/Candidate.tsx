@@ -1,4 +1,12 @@
-import { Box, Button, Fade, useDisclosure, Text, Icon } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Fade,
+  useDisclosure,
+  Text,
+  Icon,
+  useToast,
+} from "@chakra-ui/react";
 import { FC, useEffect, useRef, useState } from "react";
 import { color } from "../../styles/colors";
 import { appColor } from "../../types/color";
@@ -39,6 +47,7 @@ const Candidate: FC<Props> = ({
   setCandidates,
 }) => {
   const nameRef = useRef("");
+  const toast = useToast();
   const [isSelected, setIsSelected] = useState(false);
   const name = useRecoilValue(memberNameAtom);
   const onClick = (tmpName: string) => {
@@ -111,6 +120,15 @@ const Candidate: FC<Props> = ({
   };
   useEffect(() => {
     if (name == "" && nameRef.current !== "") {
+    } else if (
+      candidate.members.find(
+        (member) => member.name === name && name !== nameRef.current
+      )
+    ) {
+      console.log("既に登録したメンバーです", name, nameRef.current);
+
+      setIsSelected(true);
+      nameRef.current = name;
     } else {
       if (isSelected) {
         updateMember(nameRef.current, name);
@@ -135,7 +153,7 @@ const Candidate: FC<Props> = ({
       alignItems="flex-start"
       onClick={() => onClick(name)}
     >
-      <Fade in={isSelected}>
+      <Fade unmountOnExit in={isSelected}>
         <Icon as={CheckIcon} color="white" marginY="8px" />
       </Fade>
     </Button>

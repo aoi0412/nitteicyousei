@@ -12,21 +12,26 @@ import { start } from "repl";
 import { Timestamp } from "firebase/firestore";
 
 type Props = {
-  candidate: candidate;
+  candidate: candidate | null;
   index: number;
   onClick: () => void;
   height: number;
 };
 const Candidate: FC<Props> = ({ candidate, height, index, onClick }) => {
   const formatTimeRange = () => {
-    let startTime = candidate.startTime;
-    if (Object.prototype.toString.call(startTime) !== "[object Date]") {
-      startTime = new Date((startTime as unknown as Timestamp).seconds * 1000);
-    }
-    const tmp: Date = addMinutes(startTime, candidate.scheduleTime);
+    if (candidate) {
+      let startTime = candidate.startTime;
+      if (Object.prototype.toString.call(startTime) !== "[object Date]") {
+        startTime = new Date(
+          (startTime as unknown as Timestamp).seconds * 1000
+        );
+      }
+      const tmp: Date = addMinutes(startTime, candidate.scheduleTime);
 
-    return format(startTime, "hh':'mm") + "~" + format(tmp, "hh':'mm");
+      return format(startTime, "hh':'mm") + "~" + format(tmp, "hh':'mm");
+    }
   };
+  if (!candidate) return <></>;
   return (
     <Button
       position="absolute"

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Fade,
   Table,
   TableCaption,
   TableContainer,
@@ -115,24 +116,31 @@ const Calendar: FC<Props> = ({ date }) => {
                         padding="0"
                         position="relative"
                       >
-                        {formatDate(date) in candidates &&
-                          formatTime(time) in candidates[formatDate(date)] && (
-                            <Candidate
-                              candidate={
-                                candidates[formatDate(date)][formatTime(time)]
-                              }
-                              height={height}
-                              index={index2}
-                              onClick={() => {
-                                deleteCandidate(
-                                  date,
-                                  time,
-                                  setCandidates,
-                                  candidates
-                                );
-                              }}
-                            />
-                          )}
+                        <Fade
+                          in={
+                            formatDate(date) in candidates &&
+                            formatTime(time) in candidates[formatDate(date)]
+                          }
+                          unmountOnExit
+                        >
+                          <Candidate
+                            candidate={
+                              candidates[formatDate(date)]
+                                ? candidates[formatDate(date)][formatTime(time)]
+                                : null
+                            }
+                            height={height}
+                            index={index2}
+                            onClick={() => {
+                              deleteCandidate(
+                                date,
+                                time,
+                                setCandidates,
+                                candidates
+                              );
+                            }}
+                          />
+                        </Fade>
                         <Button
                           height={`${height}px`}
                           width="full"
