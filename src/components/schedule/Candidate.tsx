@@ -88,18 +88,19 @@ const Candidate: FC<Props> = ({
         onClick={onOpen}
       >
         <Flex alignItems="center">
-          <Icon as={CheckIcon} color="white" width="3" />
+          {/* <Icon as={CheckIcon} color="white" width="3" /> */}
           <Text
             height={height}
             display="flex"
-            alignItems="center"
+            alignItems="flex-start"
             color="white"
             fontWeight="bold"
             fontSize="2xs"
             overflowWrap="break-word"
             paddingX="1"
           >
-            {candidate.members.length}
+            {/* {candidate.members.length} */}
+            {formatTimeRange()}
           </Text>
         </Flex>
       </Button>

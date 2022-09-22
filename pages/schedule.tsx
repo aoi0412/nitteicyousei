@@ -142,17 +142,24 @@ const SchedulePage = () => {
                 </Box>
               </TabPanel>
               {/* 候補一覧 */}
-              <TabPanel>
-                {showCanditateList().map((candidate) => (
-                  <Candidate
-                    key={candidate.startTime.toString()}
-                    position="relative"
-                    candidate={candidate}
-                    index={1}
-                    height={40}
-                    width={40}
-                  />
-                ))}
+              <TabPanel display="flex" flexWrap="wrap">
+                {showCanditateList()
+                  .sort(
+                    (a, b) =>
+                      new Date(b.startTime).getTime() -
+                      new Date(a.startTime).getTime()
+                  )
+                  .sort((a, b) => b.members.length - a.members.length)
+                  .map((candidate) => (
+                    <Candidate
+                      key={candidate.startTime.toString()}
+                      position="relative"
+                      candidate={candidate}
+                      index={1}
+                      height={40}
+                      width={40}
+                    />
+                  ))}
               </TabPanel>
               {/* メンバー一覧 */}
               <TabPanel>
@@ -191,7 +198,7 @@ const SchedulePage = () => {
               router.push(`/joinInSchedule/${scheduleID}`);
             }}
           >
-            自分の予定を入力する
+            予定を入力する
           </WideButton>
         </Box>
       </Box>
