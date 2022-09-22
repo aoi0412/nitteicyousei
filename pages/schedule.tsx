@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { addWeeks, subWeeks } from "date-fns";
 import { useRouter } from "next/router";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import Header from "../src/components/Header";
 import Calendar from "../src/components/schedule/Calendar";
@@ -29,7 +29,6 @@ import {
   timeAtom,
 } from "../src/database/recoil";
 import { color } from "../src/styles/colors";
-import { candidate } from "../src/types/model";
 
 const SchedulePage = () => {
   const router = useRouter();
@@ -77,9 +76,14 @@ const SchedulePage = () => {
         </Text>
         <Tabs isFitted justifyContent="center">
           <TabList>
-            <Tab>カレンダー</Tab>
-            <Tab>候補一覧</Tab>
-            <Tab>メンバー一覧</Tab>
+            {["カレンダー", "候補一覧", "メンバー一覧"].map((text) => (
+              <Tab
+                color="gray.200"
+                _selected={{ color: color.main, borderColor: color.main }}
+              >
+                {text}
+              </Tab>
+            ))}
           </TabList>
           <TabPanels>
             {/* カレンダー */}
