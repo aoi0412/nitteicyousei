@@ -10,13 +10,19 @@ export const saveSchedule = (data: scheduleData) => {
     scheduleName: data.scheduleName,
     scheduleTime: data.scheduleTime,
     candidates: data.candidates,
+    members: [],
   } as scheduleData);
   return { URL: URL, id: data.id };
 };
 
-export const updateCandidates = (id: string, candidates: candidates) => {
+export const updateCandidates = (
+  id: string,
+  candidates: candidates,
+  members: string[]
+) => {
   updateDoc(doc(db, "schedules", id), {
     candidates: candidates,
+    members: members,
   });
 };
 

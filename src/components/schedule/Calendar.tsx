@@ -77,68 +77,73 @@ const Calendar: FC<Props> = ({ date }) => {
             })}
           </Tr>
         </Thead>
-        <Tbody marginTop="30px" padding="0">
-          <Tr display="flex">
-            <Td
-              padding="0"
-              paddingRight="2"
-              borderRightWidth="thin"
-              borderColor={color.dark}
-            >
-              <Box height={`${height - 12}px`}></Box>
-              {minuteList.slice(1).map((data) => (
-                <Text
-                  key={data.Hour + data.Minute}
-                  height={`${height}px`}
-                  verticalAlign="center"
-                  fontSize="sm"
-                >
-                  {formatTime(data)}
-                </Text>
-              ))}
-            </Td>
-            {weekList.map((date) => {
-              return (
-                <Td
-                  key={date.toString()}
-                  display="flex"
-                  flexGrow={1}
-                  flexDir="column"
-                  borderRightWidth="thin"
-                  borderColor={color.dark}
-                  padding="0"
-                  margin="0"
-                  overflow="hidden"
-                >
-                  {minuteList.map((time, index2) => {
-                    return (
-                      <Box
-                        key={time.Hour + time.Minute}
-                        borderBottomStyle={index2 % 2 == 0 ? "dotted" : "solid"}
-                        borderBottomWidth="thin"
-                        borderColor={color.dark}
-                        borderRadius="none"
-                        height={`${height}px`}
-                        padding="0"
-                        position="relative"
-                      >
-                        {formatDate(date) in candidates &&
-                          formatTime(time) in candidates[formatDate(date)] && (
-                            <Candidate
-                              candidate={
-                                candidates[formatDate(date)][formatTime(time)]
-                              }
-                              height={height}
-                              index={index2}
-                            />
-                          )}
-                      </Box>
-                    );
-                  })}
-                </Td>
-              );
-            })}
-          </Tr>
+        <Tbody>
+          <Box height="400px" overflowY="scroll" marginRight="-4">
+            <Tr display="flex">
+              <Td
+                padding="0"
+                paddingRight="2"
+                borderRightWidth="thin"
+                borderColor={color.dark}
+              >
+                <Box height={`${height - 12}px`}></Box>
+                {minuteList.slice(1).map((data) => (
+                  <Text
+                    key={data.Hour + data.Minute}
+                    height={`${height}px`}
+                    verticalAlign="center"
+                    fontSize="sm"
+                  >
+                    {formatTime(data)}
+                  </Text>
+                ))}
+              </Td>
+              {weekList.map((date) => {
+                return (
+                  <Td
+                    key={date.toString()}
+                    display="flex"
+                    flexGrow={1}
+                    flexDir="column"
+                    borderRightWidth="thin"
+                    borderColor={color.dark}
+                    padding="0"
+                    margin="0"
+                    overflow="hidden"
+                  >
+                    {minuteList.map((time, index2) => {
+                      return (
+                        <Box
+                          key={time.Hour + time.Minute}
+                          borderBottomStyle={
+                            index2 % 2 == 0 ? "dotted" : "solid"
+                          }
+                          borderBottomWidth="thin"
+                          borderColor={color.dark}
+                          borderRadius="none"
+                          height={`${height}px`}
+                          padding="0"
+                          position="relative"
+                        >
+                          {formatDate(date) in candidates &&
+                            formatTime(time) in
+                              candidates[formatDate(date)] && (
+                              <Candidate
+                                candidate={
+                                  candidates[formatDate(date)][formatTime(time)]
+                                }
+                                height={height}
+                                index={index2}
+                              />
+                            )}
+                        </Box>
+                      );
+                    })}
+                  </Td>
+                );
+              })}
+            </Tr>
+          </Box>
         </Tbody>
       </Table>
     </TableContainer>

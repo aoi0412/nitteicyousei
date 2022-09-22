@@ -1,9 +1,18 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Flex, Icon, IconButton, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Fade,
+  Flex,
+  Icon,
+  IconButton,
+  Input,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { addWeeks, subWeeks } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import Header from "../../src/components/Header";
 import Calendar from "../../src/components/joinSchedule/Calendar";
 import StepTitle from "../../src/components/StepTitle";
@@ -13,12 +22,14 @@ import { getScheduleData } from "../../src/database/functions/getData";
 import {
   candidatesAtom,
   memberNameAtom,
+  membersAtom,
   scheduleNameAtom,
   timeAtom,
 } from "../../src/database/recoil";
 import { color } from "../../src/styles/colors";
 
 const ChangeSchedule = () => {
+  const toast = useToast();
   const [name, setName] = useRecoilState(memberNameAtom);
   const [tmpName, setTmpName] = useState("");
   const router = useRouter();
@@ -26,16 +37,22 @@ const ChangeSchedule = () => {
   const [pageDate, setPageDate] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(true);
   const [candidates, setCandidates] = useRecoilState(candidatesAtom);
-  const [scheduleName, setScheduleName] = useRecoilState(scheduleNameAtom);
+  const setScheduleName = useSetRecoilState(scheduleNameAtom);
   const setTime = useSetRecoilState(timeAtom);
+  const [members, setMembers] = useRecoilState(membersAtom);
   useLayoutEffect(() => {
     if (scheduleID) {
       getScheduleData(scheduleID as string).then((data) => {
         const scheduleData = data.data();
         setCandidates(scheduleData?.candidates);
-        setName(scheduleData?.scheduleName);
+        setScheduleName(scheduleData?.scheduleName);
+        setMembers(scheduleData?.members);
         setTime(scheduleData?.scheduleTime);
       });
+      console.log(name);
+      if (name) {
+        setTmpName(name);
+      }
       setLoading(false);
     }
   }, [scheduleID]);
@@ -45,6 +62,12 @@ const ChangeSchedule = () => {
         <Text>loading...</Text>
       </Box>
     );
+  const tmpNameInMembers = () => {
+    return members.find((name) => name === tmpName);
+  };
+  const nameInMembers = () => {
+    return members.find((member) => member === name);
+  };
   return (
     <Box
       height={window.innerHeight}
@@ -66,13 +89,32 @@ const ChangeSchedule = () => {
           <StepTitle stepNum={1}>自分の名前を入力</StepTitle>
           <Box marginX="10%">
             <Input
+              isDisabled={tmpNameInMembers() && nameInMembers()}
               focusBorderColor={color.dark}
               color={color.dark}
               variant="flushed"
               placeholder="自分の名前"
               _placeholder={{ color: color.dark }}
               onChange={(e) => setTmpName(e.target.value)}
-              onBlur={() => setName(tmpName)}
+              isInvalid={!(tmpNameInMembers() === nameInMembers())}
+              onBlur={() => {
+                console.log(members, tmpNameInMembers(), nameInMembers());
+                if (tmpNameInMembers() && !nameInMembers()) {
+                  toast({
+                    title: "既に登録したメンバーです",
+                    description:
+                      "既存のメンバーの内容を変更したい場合はスケジュールページのメンバー一覧から行ってください",
+                    status: "warning",
+                    // size: "sm",
+                  });
+                } else if (!tmpNameInMembers() && nameInMembers()) {
+                  console.log("ありえない！！", name, tmpName);
+                  setName("");
+                  setTmpName("");
+                } else {
+                  setName(tmpName);
+                }
+              }}
               value={tmpName}
               margin="4"
             />
@@ -117,17 +159,25 @@ const ChangeSchedule = () => {
           margin="0"
           display="flex"
           alignItems="flex-end"
+          justifyContent="center"
           maxW="970px"
         >
-          <WideButton
-            onClick={() => {
-              console.log(candidates);
-              updateCandidates(scheduleID as string, candidates);
-              router.back();
-            }}
-          >
-            決定
-          </WideButton>
+          <Fade in={tmpName ? true : false} unmountOnExit>
+            <WideButton
+              onClick={() => {
+                console.log(candidates);
+                let tmp: string[] = [...members];
+                if (!tmp.find((tmpdata) => tmpdata === tmpName)) {
+                  tmp.push(tmpName);
+                }
+                updateCandidates(scheduleID as string, candidates, tmp);
+                setName("");
+                router.back();
+              }}
+            >
+              決定
+            </WideButton>
+          </Fade>
         </Box>
       </Box>
     </Box>

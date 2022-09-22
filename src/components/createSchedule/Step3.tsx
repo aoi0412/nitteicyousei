@@ -14,6 +14,9 @@ import {
   Flex,
   useToast,
   Tooltip,
+  Fade,
+  Show,
+  Hide,
 } from "@chakra-ui/react";
 import { Router, useRouter } from "next/router";
 import { useState } from "react";
@@ -39,7 +42,6 @@ const Step3 = () => {
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const toast = useToast();
   const router = useRouter();
-
   const copyText = (text: string) => {
     // テキストコピー用の一時要素を作成
     const pre = document.createElement("pre");
@@ -67,12 +69,14 @@ const Step3 = () => {
       candidates: candidates,
       url: null,
       id: id,
+      members: [],
     };
     const result = saveSchedule(scheduleData);
     setUrl(result.URL);
     setId(result.id);
     onOpen();
   };
+
   return (
     <Box
       zIndex={99}
@@ -82,9 +86,15 @@ const Step3 = () => {
       margin="0"
       display="flex"
       alignItems="flex-end"
+      justifyContent="center"
       maxW="970px"
     >
-      <WideButton onClick={create}>スケージュールを作成</WideButton>
+      <Fade
+        unmountOnExit
+        in={Object.keys(candidates).length !== 0 && name ? true : false}
+      >
+        <WideButton onClick={create}>スケージュールを作成</WideButton>
+      </Fade>
       <Modal
         size="lg"
         blockScrollOnMount={false}

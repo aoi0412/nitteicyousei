@@ -19,6 +19,7 @@ const WideButton: FC<Props> = ({ children, onClick }) => {
       minW="300px"
       maxW="500px"
       onClick={onClick}
+      paddingX="24"
     >
       {children}
     </Button>

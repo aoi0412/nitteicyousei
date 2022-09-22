@@ -10,6 +10,7 @@ export type scheduleData = {
   url: string | null;
   candidates: candidates;
   id: string;
+  members: string[];
 };
 
 export type candidates = {

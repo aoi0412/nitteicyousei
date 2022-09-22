@@ -100,5 +100,8 @@ export const deleteCandidate = (
   let tmp = { ...candidates };
   tmp[formatDate(date)] = { ...candidates[formatDate(date)] };
   delete tmp[formatDate(date)][formatTime(time)];
+  if (Object.keys(tmp[formatDate(date)]).length === 0) {
+    delete tmp[formatDate(date)];
+  }
   setCandidates(tmp);
 };
