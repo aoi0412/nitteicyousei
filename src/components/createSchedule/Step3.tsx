@@ -69,6 +69,7 @@ const Step3 = () => {
       candidates: candidates,
       url: null,
       id: id,
+      members: [],
     };
     const result = saveSchedule(scheduleData);
     setUrl(result.URL);
