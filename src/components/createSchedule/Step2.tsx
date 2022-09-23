@@ -7,7 +7,6 @@ import { color } from "../../styles/colors";
 import { subWeeks, addWeeks, format } from "date-fns";
 const Step2 = () => {
   const [pageDate, setPageDate] = useState(new Date());
-  console.log("pageDate is", pageDate);
   return (
     <Box display="flex" flexDir="column" flexGrow={1}>
       <StepTitle stepNum={2}>会議予定の候補を入力</StepTitle>

@@ -51,7 +51,6 @@ const Candidate: FC<Props> = ({
   const [isSelected, setIsSelected] = useState(false);
   const name = useRecoilValue(memberNameAtom);
   const onClick = (tmpName: string) => {
-    console.log(tmpName);
     if (tmpName) {
       if (isSelected) {
         deleteMember(tmpName);
@@ -76,7 +75,6 @@ const Candidate: FC<Props> = ({
       members: members,
     };
     tmpC[formatDate(date)][formatTime(time)] = tmp;
-    console.log("deleted", name, ":", tmpC);
 
     setCandidates(tmpC);
   };
@@ -93,7 +91,6 @@ const Candidate: FC<Props> = ({
       members: members,
     };
     tmpC[formatDate(date)][formatTime(time)] = tmp;
-    console.log("added", name, ":", tmpC);
 
     setCandidates(tmpC);
   };
@@ -114,7 +111,6 @@ const Candidate: FC<Props> = ({
       members: members,
     };
     tmpC[formatDate(date)][formatTime(time)] = tmp;
-    console.log("updated", before, "=>", after, ":", tmpC);
 
     setCandidates(tmpC);
   };
@@ -125,8 +121,6 @@ const Candidate: FC<Props> = ({
         (member) => member.name === name && name !== nameRef.current
       )
     ) {
-      console.log("既に登録したメンバーです", name, nameRef.current);
-
       setIsSelected(true);
       nameRef.current = name;
     } else {

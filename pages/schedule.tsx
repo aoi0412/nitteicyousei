@@ -13,8 +13,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { addWeeks, format, subWeeks } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import Header from "../src/components/Header";
 import Calendar from "../src/components/schedule/Calendar";
@@ -29,6 +30,7 @@ import {
   timeAtom,
 } from "../src/database/recoil";
 import { color } from "../src/styles/colors";
+import { candidate, candidates } from "../src/types/model";
 
 const SchedulePage = () => {
   const router = useRouter();
@@ -40,14 +42,16 @@ const SchedulePage = () => {
   const setName = useSetRecoilState(memberNameAtom);
   const [pageDate, setPageDate] = useState(new Date());
   const [members, setMembers] = useRecoilState(membersAtom);
-  const showCanditateList = () => {
-    let flatten = Object.values(candidates).flat();
+  const showCanditateList = (a: candidates) => {
+    let flatten = Object.values(a).flat();
     let tmp = flatten.map((times) => {
       return Object.values(times);
     });
-    console.log(tmp.flat());
     return tmp.flat();
   };
+  useEffect(() => {
+    console.log(candidates);
+  }, []);
   useLayoutEffect(() => {
     if (scheduleID) {
       getScheduleData(scheduleID as string).then((data) => {
@@ -56,6 +60,19 @@ const SchedulePage = () => {
         setScheduleName(scheduleData?.scheduleName);
         setTime(scheduleData?.scheduleTime);
         setMembers(scheduleData?.members);
+
+        const tmp: candidate[] = showCanditateList(
+          scheduleData?.candidates
+        ).sort(
+          (a, b) =>
+            new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
+        );
+        if (tmp.length) {
+          const date = new Date(
+            (tmp[0].startTime as unknown as Timestamp).seconds * 1000
+          );
+          setPageDate(date);
+        }
       });
       setLoading(false);
     }
@@ -144,7 +161,7 @@ const SchedulePage = () => {
               </TabPanel>
               {/* 候補一覧 */}
               <TabPanel display="flex" flexWrap="wrap">
-                {showCanditateList()
+                {showCanditateList(candidates)
                   .sort(
                     (a, b) =>
                       new Date(b.startTime).getTime() -
@@ -169,7 +186,6 @@ const SchedulePage = () => {
                     <Button
                       key={member}
                       onClick={() => {
-                        console.log("setted", member);
                         setName(member);
                         router.push(`/joinInSchedule/${scheduleID}`);
                       }}

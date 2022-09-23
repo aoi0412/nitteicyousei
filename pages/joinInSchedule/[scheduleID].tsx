@@ -49,7 +49,6 @@ const ChangeSchedule = () => {
         setMembers(scheduleData?.members);
         setTime(scheduleData?.scheduleTime);
       });
-      console.log(name);
       if (name) {
         setTmpName(name);
       }
@@ -99,7 +98,6 @@ const ChangeSchedule = () => {
               onChange={(e) => setTmpName(e.target.value)}
               isInvalid={!(tmpNameInMembers() === nameInMembers())}
               onBlur={() => {
-                console.log(members, tmpNameInMembers(), nameInMembers());
                 if (tmpNameInMembers() && !nameInMembers()) {
                   toast({
                     title: "既に登録したメンバーです",
@@ -109,7 +107,6 @@ const ChangeSchedule = () => {
                     // size: "sm",
                   });
                 } else if (!tmpNameInMembers() && nameInMembers()) {
-                  console.log("ありえない！！", name, tmpName);
                   setName("");
                   setTmpName("");
                 } else {
@@ -166,7 +163,6 @@ const ChangeSchedule = () => {
           <Fade in={tmpName ? true : false} unmountOnExit>
             <WideButton
               onClick={() => {
-                console.log(candidates);
                 let tmp: string[] = [...members];
                 if (!tmp.find((tmpdata) => tmpdata === tmpName)) {
                   tmp.push(tmpName);
