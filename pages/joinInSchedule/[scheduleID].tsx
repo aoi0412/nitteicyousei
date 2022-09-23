@@ -9,7 +9,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { addWeeks, subWeeks } from "date-fns";
+import { addWeeks, format, subWeeks } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -143,7 +143,7 @@ const ChangeSchedule = () => {
               }}
             />
             <Text fontSize="20" fontWeight="bold" color={color.dark}>
-              {pageDate.getFullYear() + " " + pageDate.getMonth() + "月"}
+              {format(pageDate, "y' 'M'月'")}
             </Text>
           </Flex>
         </Box>

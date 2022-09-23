@@ -4,9 +4,10 @@ import StepTitle from "../StepTitle";
 import Calendar from "./Calendar";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { color } from "../../styles/colors";
-import { subWeeks, addWeeks } from "date-fns";
+import { subWeeks, addWeeks, format } from "date-fns";
 const Step2 = () => {
   const [pageDate, setPageDate] = useState(new Date());
+  console.log("pageDate is", pageDate);
   return (
     <Box display="flex" flexDir="column" flexGrow={1}>
       <StepTitle stepNum={2}>会議予定の候補を入力</StepTitle>
@@ -32,7 +33,7 @@ const Step2 = () => {
           }}
         />
         <Text fontSize="20" fontWeight="bold" color={color.dark}>
-          {pageDate.getFullYear() + " " + pageDate.getMonth() + "月"}
+          {format(pageDate, "y' 'M'月'")}
         </Text>
       </Flex>
       <Box display="flex" flexGrow={1} overflowY="scroll" position="relative">

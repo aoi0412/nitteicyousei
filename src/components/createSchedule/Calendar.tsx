@@ -155,6 +155,7 @@ const Calendar: FC<Props> = ({ date }) => {
                           _hover={{ bg: "rgba(0,0,0,0.1)" }}
                           backgroundColor="rgba(0,0,0,0)"
                           onClick={() => {
+                            console.log(date);
                             setCandidate(
                               date,
                               time,

@@ -15,8 +15,11 @@ import { useRecoilState } from "recoil";
 import { candidatesAtom } from "../database/recoil";
 
 export const getWeekList = (date: Date) => {
+  console.log("today is", date.toString());
   const sunday = previousSunday(date);
+  console.log("priviousSunday is", sunday.toString());
   const nextsaturday = nextSaturday(sunday);
+  console.log("nextsaturday is", nextsaturday.toString());
   const weekList: Date[] = eachDayOfInterval({
     start: sunday,
     end: nextsaturday,
