@@ -57,23 +57,25 @@ const SchedulePage = () => {
   useLayoutEffect(() => {
     if (scheduleID) {
       getScheduleData(scheduleID as string, (data) => {
-        const scheduleData = data.data();
-        setCandidates(scheduleData?.candidates);
-        setScheduleName(scheduleData?.scheduleName);
-        setTime(scheduleData?.scheduleTime);
-        setMembers(scheduleData?.members);
+        if (data) {
+          const scheduleData = data;
+          setCandidates(scheduleData?.candidates);
+          setScheduleName(scheduleData?.scheduleName);
+          setTime(scheduleData?.scheduleTime);
+          setMembers(scheduleData?.members);
 
-        const tmp: candidate[] = showCanditateList(
-          scheduleData?.candidates
-        ).sort(
-          (a, b) =>
-            new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
-        );
-        if (tmp.length) {
-          const date = new Date(
-            (tmp[0].startTime as unknown as Timestamp).seconds * 1000
+          const tmp: candidate[] = showCanditateList(
+            scheduleData?.candidates
+          ).sort(
+            (a, b) =>
+              new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
           );
-          setPageDate(date);
+          if (tmp.length) {
+            const date = new Date(
+              (tmp[0].startTime as unknown as Timestamp).seconds * 1000
+            );
+            setPageDate(date);
+          }
         }
       });
       setLoading(false);

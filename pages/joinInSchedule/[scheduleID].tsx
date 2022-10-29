@@ -43,8 +43,8 @@ const ChangeSchedule = () => {
   const [members, setMembers] = useRecoilState(membersAtom);
 
   const getData = () => {
-    getScheduleData(scheduleID as string, (data: any) => {
-      const scheduleData = data.data();
+    getScheduleData(scheduleID as string, (data) => {
+      const scheduleData = data;
       setCandidates(scheduleData?.candidates);
       setScheduleName(scheduleData?.scheduleName);
       setMembers(scheduleData?.members);
