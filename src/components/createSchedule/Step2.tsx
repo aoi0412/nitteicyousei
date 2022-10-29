@@ -13,7 +13,7 @@ const Step2 = () => {
   return (
     <Box display="flex" flexDir="column" flexGrow={1}>
       <StepTitle stepNum={2}>会議予定の候補を入力</StepTitle>
-      <Calendar mode="change" height={"30px"} />
+      <Calendar mode="change" />
       {/* <Flex paddingLeft="4" margin="2">
         <IconButton
           bg="white"
