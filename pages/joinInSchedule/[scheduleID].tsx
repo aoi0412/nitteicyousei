@@ -53,13 +53,6 @@ const ChangeSchedule = () => {
   };
   useLayoutEffect(() => {
     if (scheduleID) {
-      // getScheduleData(scheduleID as string).then((data) => {
-      //   const scheduleData = data.data();
-      //   setCandidates(scheduleData?.candidates);
-      //   setScheduleName(scheduleData?.scheduleName);
-      //   setMembers(scheduleData?.members);
-      //   setTime(scheduleData?.scheduleTime);
-      // });
       getData();
       if (name) {
         setTmpName(name);
@@ -176,7 +169,6 @@ const ChangeSchedule = () => {
           <Fade in={tmpName ? true : false} unmountOnExit>
             <WideButton
               onClick={() => {
-                getData();
                 let tmp: string[] = [...members];
                 if (!tmp.find((tmpdata) => tmpdata === tmpName)) {
                   tmp.push(tmpName);
