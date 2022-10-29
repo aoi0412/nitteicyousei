@@ -25,3 +25,16 @@ export const membersAtom = atom({
   key: "members",
   default: [],
 });
+
+export const calendarWeekDateAtom = atom({
+  key: "calendarWeek",
+  default: new Date(),
+});
+
+export const windowSizeAtom = atom({
+  key: "windowSize",
+  default: {
+    height: 0,
+    width: 0,
+  },
+});

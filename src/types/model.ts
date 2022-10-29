@@ -28,3 +28,5 @@ export type candidate = {
 export type member = {
   name: string;
 };
+
+export type mode = "change" | "joinIn" | "view";

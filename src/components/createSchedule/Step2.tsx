@@ -1,16 +1,20 @@
-import { Box, Flex, Text, Icon, IconButton } from "@chakra-ui/react";
+import { Box, Flex, Text, Icon, IconButton, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import StepTitle from "../StepTitle";
-import Calendar from "./Calendar";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { color } from "../../styles/colors";
 import { subWeeks, addWeeks, format } from "date-fns";
+import Calendar from "../Calendar";
+import { render } from "react-dom";
+import { devideCustomHooks } from "../../function/calendar";
 const Step2 = () => {
   const [pageDate, setPageDate] = useState(new Date());
+  const devidedCustom = devideCustomHooks("change");
   return (
     <Box display="flex" flexDir="column" flexGrow={1}>
       <StepTitle stepNum={2}>会議予定の候補を入力</StepTitle>
-      <Flex paddingLeft="4" margin="2">
+      <Calendar mode="change" height={"30px"} />
+      {/* <Flex paddingLeft="4" margin="2">
         <IconButton
           bg="white"
           _hover={{ bg: "rgba(0,0,0,0)" }}
@@ -39,7 +43,7 @@ const Step2 = () => {
         <Box position="absolute" width="100%" top="0">
           <Calendar date={pageDate} />
         </Box>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

@@ -17,9 +17,9 @@ import { Timestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import Calendar from "../src/components/Calendar";
+import Candidate from "../src/components/Calendar/TimeCellList/TimeCell/Candidate";
 import Header from "../src/components/Header";
-import Calendar from "../src/components/schedule/Calendar";
-import Candidate from "../src/components/schedule/Candidate";
 import WideButton from "../src/components/WideButton";
 import { getScheduleData } from "../src/database/functions/getData";
 import {
@@ -29,10 +29,12 @@ import {
   scheduleNameAtom,
   timeAtom,
 } from "../src/database/recoil";
+import { useWindowResize } from "../src/function/windowSize";
 import { color } from "../src/styles/colors";
 import { candidate, candidates } from "../src/types/model";
 
 const SchedulePage = () => {
+  useWindowResize();
   const router = useRouter();
   const { scheduleID } = router.query;
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,7 +56,7 @@ const SchedulePage = () => {
   }, []);
   useLayoutEffect(() => {
     if (scheduleID) {
-      getScheduleData(scheduleID as string).then((data) => {
+      getScheduleData(scheduleID as string, (data) => {
         const scheduleData = data.data();
         setCandidates(scheduleData?.candidates);
         setScheduleName(scheduleData?.scheduleName);
@@ -123,41 +125,7 @@ const SchedulePage = () => {
             <TabPanels display="flex" flexGrow={1} flexDir="column">
               {/* カレンダー */}
               <TabPanel padding="0" display="flex" flexDir="column" flex={1}>
-                <Flex paddingLeft="4" margin="2">
-                  <IconButton
-                    bg="white"
-                    _hover={{ bg: "rgba(0,0,0,0)" }}
-                    size="sm"
-                    aria-label="left-arrow"
-                    icon={<Icon as={ChevronLeftIcon} w="8" h="8" />}
-                    onClick={() => {
-                      setPageDate(subWeeks(pageDate, 1));
-                    }}
-                  />
-                  <IconButton
-                    bg="white"
-                    _hover={{ bg: "rgba(0,0,0,0)" }}
-                    size="sm"
-                    aria-label="left-arrow"
-                    icon={<Icon as={ChevronRightIcon} w="8" h="8" />}
-                    onClick={() => {
-                      setPageDate(addWeeks(pageDate, 1));
-                    }}
-                  />
-                  <Text fontSize="20" fontWeight="bold" color={color.dark}>
-                    {format(pageDate, "y' 'M'月'")}
-                  </Text>
-                </Flex>
-                <Box
-                  display="flex"
-                  flexGrow={1}
-                  overflowY="scroll"
-                  position="relative"
-                >
-                  <Box position="absolute" width="100%" top="0">
-                    <Calendar date={pageDate} />
-                  </Box>
-                </Box>
+                <Calendar mode="view" />
               </TabPanel>
               {/* 候補一覧 */}
               <TabPanel display="flex" flexWrap="wrap">
@@ -169,14 +137,14 @@ const SchedulePage = () => {
                   )
                   .sort((a, b) => b.members.length - a.members.length)
                   .map((candidate) => (
-                    <Candidate
-                      key={candidate.startTime.toString()}
-                      position="relative"
-                      candidate={candidate}
-                      index={1}
-                      height={40}
-                      width={40}
-                    />
+                    <Box key={candidate.startTime.toString()}>
+                      <Text>
+                        {new Date(
+                          (candidate.startTime as unknown as Timestamp)
+                            .seconds * 1000
+                        ).toString()}
+                      </Text>
+                    </Box>
                   ))}
               </TabPanel>
               {/* メンバー一覧 */}

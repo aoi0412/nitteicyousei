@@ -3,13 +3,17 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useLayoutEffect, useState } from "react";
+import { useSetRecoilState } from "recoil";
 import Header from "../src/components/Header";
 import WideButton from "../src/components/WideButton";
+import { windowSizeAtom } from "../src/database/recoil";
+import { useWindowResize } from "../src/function/windowSize";
 import { color } from "../src/styles/colors";
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+  useWindowResize();
   useLayoutEffect(() => {
     setLoading(false);
   }, []);

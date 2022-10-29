@@ -1,5 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useWindowResize } from "../../function/windowSize";
 import Header from "../Header";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
@@ -10,6 +11,8 @@ const CreateScheduleComp = () => {
   useEffect(() => {
     setLoading(false);
   }, []);
+  useWindowResize();
+
   if (loading)
     return (
       <Box>

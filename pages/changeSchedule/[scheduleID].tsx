@@ -2,8 +2,10 @@ import { useRouter } from "next/router";
 import Header from "../../src/components/Header";
 import StepTitle from "../../src/components/StepTitle";
 import WideButton from "../../src/components/WideButton";
+import { useWindowResize } from "../../src/function/windowSize";
 
 const ChangeSchedule = () => {
+  useWindowResize();
   const router = useRouter();
   const { scheduleID } = router.query;
   return (
