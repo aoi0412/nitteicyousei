@@ -1,9 +1,3 @@
-export type MyData = {
-  userId: string;
-  userName: string;
-  scheduleName: string;
-};
-
 export type scheduleData = {
   scheduleName: string;
   scheduleTime: number;
@@ -30,3 +24,9 @@ export type member = {
 };
 
 export type mode = "change" | "joinIn" | "view";
+
+//自分の日程入力時に使用するデータ
+export type tmpUserData = {
+  name: string;
+  candidateTimes: { date: string; time: string; startTime: Date }[];
+};
