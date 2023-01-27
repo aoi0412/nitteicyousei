@@ -1,9 +1,16 @@
 import { atom } from "recoil";
-import { candidate, candidates } from "../types/model";
+import { candidate, candidates, joinInCandidates } from "../types/model";
 
-export const candidatesAtom = atom({
+// 候補時間と参加メンバー
+export const candidatesAtom = atom<candidates>({
   key: "candidates",
-  default: {} as candidates,
+  default: {},
+});
+
+// 候補時間と、自分がその時間に参加できるかのBoolean
+export const joinInCandidatesAtom = atom<joinInCandidates>({
+  key: "joinInCandidates",
+  default: {},
 });
 
 export const timeAtom = atom({

@@ -11,24 +11,18 @@ import {
   addMinutes,
 } from "date-fns";
 import ja from "date-fns/locale/ja";
-import { candidate, candidates, mode } from "../types/model";
+import { candidate, mode } from "../types/model";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   candidatesAtom,
+  joinInCandidatesAtom,
   memberNameAtom,
   membersAtom,
   timeAtom,
 } from "../database/recoil";
 import { Timestamp } from "firebase/firestore";
-import {
-  ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Modal, useDisclosure } from "@chakra-ui/react";
+import { useRef, useState } from "react";
+import { useDisclosure } from "@chakra-ui/react";
 import { color } from "../styles/colors";
 
 export const getWeekList = (date: Date) => {
@@ -173,10 +167,7 @@ export const useCandidateFunc = (
 };
 // type returnFunc = {pushCandidate:()=>void,pushCell:()=>void};
 
-const useCandidateView = (
-  date: Date,
-  time: { Hour: number; Minute: number }
-) => {
+const useCandidateView = (date: Date, time: { Hour: number; Minute: number }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [candidates, setCandidates] = useRecoilState(candidatesAtom);
   const getCandidate = () => {
@@ -219,10 +210,7 @@ const useCandidateView = (
     },
   };
 };
-const useCandidateChange = (
-  date: Date,
-  time: { Hour: number; Minute: number }
-) => {
+const useCandidateChange = (date: Date, time: { Hour: number; Minute: number }) => {
   const [candidates, setCandidates] = useRecoilState(candidatesAtom);
   const scheduleTime = useRecoilValue(timeAtom);
   const deleteCandidate = () => {
@@ -270,103 +258,34 @@ const useCandidateChange = (
   };
 };
 
-const useCandidateJoinIn = (
-  date: Date,
-  time: { Hour: number; Minute: number }
-) => {
-  const [candidates, setCandidates] = useRecoilState(candidatesAtom);
-  const nameRef = useRef("");
+const useCandidateJoinIn = (date: Date, time: { Hour: number; Minute: number }) => {
+  const [joinInCandidates, setJoinInCandidates] = useRecoilState(joinInCandidatesAtom);
+
   const name = useRecoilValue(memberNameAtom);
   const [isSelected, setIsSelected] = useState(false);
-  useLayoutEffect(() => {
-    if (
-      formatDate(date) in candidates &&
-      formatTime(time) in candidates[formatDate(date)]
-    ) {
-      if (name == "" && nameRef.current !== "") {
-      } else if (
-        getCandidate().members.find((member) => member.name === name) &&
-        name !== nameRef.current
-      ) {
-        setIsSelected(true);
-        nameRef.current = name;
-      } else {
-        if (isSelected) {
-          updateMember(nameRef.current, name);
-        }
-        nameRef.current = name;
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name]);
-  const getCandidate = () => {
-    console.log(candidates);
 
-    return candidates[formatDate(date)][formatTime(time)];
-  };
-  const deleteMember = (name: string) => {
-    let tmpC = { ...candidates };
-    tmpC[formatDate(date)] = { ...candidates[formatDate(date)] };
-    let members = [...getCandidate().members];
-    if (members.some((member) => member.name === name)) {
-      members = members.filter((member) => member.name !== name);
-    }
-    const tmp: candidate = {
-      ...getCandidate(),
-      members: members,
-    };
-    tmpC[formatDate(date)][formatTime(time)] = tmp;
-
-    setCandidates(tmpC);
-  };
-  const addMember = (name: string) => {
-    let tmpC = { ...candidates };
-    tmpC[formatDate(date)] = { ...candidates[formatDate(date)] };
-    let members = [...getCandidate().members];
-    if (!members.some((member) => member.name === name)) {
-      members.push({ name: name });
-    }
-
-    const tmp: candidate = {
-      ...getCandidate(),
-      members: members,
-    };
-    tmpC[formatDate(date)][formatTime(time)] = tmp;
-
-    setCandidates(tmpC);
-  };
-  const updateMember = (before: string, after: string) => {
-    let tmpC = { ...candidates };
-    tmpC[formatDate(date)] = { ...candidates[formatDate(date)] };
-    let members = [...getCandidate().members];
-    if (members.some((member) => member.name === before)) {
-      members = members.filter((member) => member.name !== before);
-    }
-    if (!members.some((member) => member.name === after)) {
-      members.push({ name: after });
-    }
-
-    const tmp: candidate = {
-      ...getCandidate(),
-      members: members,
-    };
-    tmpC[formatDate(date)][formatTime(time)] = tmp;
-
-    setCandidates(tmpC);
-  };
   const pushCandidate = () => {
-    if (name) {
-      if (isSelected) {
-        deleteMember(name);
-        setIsSelected(false);
-      } else {
-        addMember(name);
-        setIsSelected(true);
-      }
-    } else {
+    if (!name) {
       alert("名前を入力してください");
+      return;
     }
+
+    console.log(joinInCandidates);
+
+    const tmpCandidates = {
+      ...joinInCandidates,
+      [formatDate(date)]: {
+        ...joinInCandidates[formatDate(date)],
+        [formatTime(time)]: {
+          ...joinInCandidates[formatDate(date)][formatTime(time)],
+          isJoin: !isSelected,
+        },
+      },
+    };
+    setJoinInCandidates(tmpCandidates);
+    setIsSelected(!isSelected);
   };
+
   const pushCell = () => {};
   return { pushCandidate, pushCell, otherFunc: { isSelected } };
 };

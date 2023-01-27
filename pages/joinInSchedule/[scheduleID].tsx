@@ -1,14 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Fade,
-  Flex,
-  Icon,
-  IconButton,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Fade, Flex, Icon, IconButton, Input, Text, useToast } from "@chakra-ui/react";
 import { addWeeks, format, subWeeks } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useState } from "react";
@@ -21,6 +12,7 @@ import { updateCandidates } from "../../src/database/functions/createSchedule";
 import { getScheduleData } from "../../src/database/functions/getData";
 import {
   candidatesAtom,
+  joinInCandidatesAtom,
   memberNameAtom,
   membersAtom,
   scheduleNameAtom,
@@ -28,6 +20,11 @@ import {
 } from "../../src/database/recoil";
 import { useWindowResize } from "../../src/function/windowSize";
 import { color } from "../../src/styles/colors";
+import {
+  joinInCandidate,
+  candidates as candidatesType,
+  joinInCandidates,
+} from "../../src/types/model";
 
 const ChangeSchedule = () => {
   useWindowResize();
@@ -38,6 +35,7 @@ const ChangeSchedule = () => {
   const { scheduleID } = router.query;
   const [loading, setLoading] = useState<boolean>(true);
   const [candidates, setCandidates] = useRecoilState(candidatesAtom);
+  const setJoinInCandidates = useSetRecoilState(joinInCandidatesAtom);
   const setScheduleName = useSetRecoilState(scheduleNameAtom);
   const setTime = useSetRecoilState(timeAtom);
   const [members, setMembers] = useRecoilState(membersAtom);
@@ -49,6 +47,22 @@ const ChangeSchedule = () => {
       setScheduleName(scheduleData?.scheduleName);
       setMembers(scheduleData?.members);
       setTime(scheduleData?.scheduleTime);
+
+      // candidatesをjoinInCandidatesに変換。
+      const tmpJoinInCandidates: joinInCandidates = {};
+      Object.entries(candidates as candidatesType).forEach(([date, value]) => {
+        Object.entries(value).forEach(([time, candidate]) => {
+          const joinInCandidate = {
+            startTime: candidate.startTime,
+            scheduleTime: candidate.scheduleTime,
+            isJoin: false,
+          };
+          if (tmpJoinInCandidates[date] === undefined) tmpJoinInCandidates[date] = {};
+          tmpJoinInCandidates[date][time] = joinInCandidate;
+        });
+      });
+      console.log(tmpJoinInCandidates);
+      setJoinInCandidates(tmpJoinInCandidates);
     });
   };
   useLayoutEffect(() => {
@@ -82,14 +96,7 @@ const ChangeSchedule = () => {
       paddingTop="60px"
     >
       <Header />
-      <Box
-        maxW="970px"
-        marginX="auto"
-        display="flex"
-        flex="1"
-        width="100%"
-        flexDir="column"
-      >
+      <Box maxW="970px" marginX="auto" display="flex" flex="1" width="100%" flexDir="column">
         {/* <Box display="flex" flexDir="column"> */}
         <StepTitle stepNum={1}>自分の名前を入力</StepTitle>
         <Box marginX="10%">
